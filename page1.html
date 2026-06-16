@@ -49,7 +49,8 @@
     }
 
     #main-content {
-      margin-left: 250px; /* default expanded */
+      margin-left: 250px;
+      /* default expanded */
       padding: 30px;
       transition: margin-left 0.3s ease;
     }
@@ -60,7 +61,7 @@
       margin-bottom: 20px;
       border-radius: 8px;
       background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .shared {
@@ -95,15 +96,24 @@
       <h3>Page 1 Specific Module</h3>
       <p>This module only exists on Page 1 and will be destroyed when navigating away.</p>
     </div>
+
+    <div class="widget" style="border-color: #e74c3c;">
+      <h3>Error Boundary Demo</h3>
+      <p>Click below to navigate to a page that doesn't exist.</p>
+      <a href="/does-not-exist.html"
+        style="display: inline-block; padding: 10px; background: #e74c3c; color: white; text-decoration: none; border-radius: 4px;">Trigger
+        404 Error</a>
+    </div>
   </div>
 
-  <div id="media-container" style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1000; border-radius: 8px; transition: all 0.5s ease;">
+  <div id="media-container"
+    style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1000; border-radius: 8px; transition: all 0.5s ease;">
     <h4 style="margin-top:0; margin-bottom: 10px;">Uninterrupted Native Media</h4>
     <video id="demo-video" data-baremetal-preserve width="300" controls autoplay muted loop>
       <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
       Your browser does not support HTML video.
     </video>
-    <br/>
+    <br />
     <audio id="demo-audio" data-baremetal-preserve controls style="width: 300px; margin-top: 10px;">
       <source src="./darren_hirst-20-474737.mp3" type="audio/mpeg">
       Your browser does not support the audio element.

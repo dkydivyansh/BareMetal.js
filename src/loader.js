@@ -2,7 +2,7 @@ import { stateManager } from './state.js';
 
 export const Loader = {
   activeModules: {}, // { key: { path: "./dash.js", module: exportedModule } }
-  config: { keepAliveSameModules: true, debug: false, autoWrap: true, transition: { enabled: false, simulatedDelay: 0, module: null } },
+  config: { keepAliveSameModules: true, debug: false, autoWrap: true, hoverPrefetch: false, showErrorNotification: false, transition: { enabled: false, simulatedDelay: 0, module: null } },
   
   setConfig(globalConfig) {
     this.config = { ...this.config, ...globalConfig };

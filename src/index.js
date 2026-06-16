@@ -13,6 +13,7 @@ const BareMetal = {
     if (config.keepAliveSameModules !== undefined) Loader.setConfig({ keepAliveSameModules: config.keepAliveSameModules });
     if (config.transition !== undefined) Loader.setConfig({ transition: config.transition });
     if (config.autoWrap !== undefined) Loader.setConfig({ autoWrap: config.autoWrap });
+    if (config.hoverPrefetch !== undefined) Loader.setConfig({ hoverPrefetch: config.hoverPrefetch });
 
     // Initialize Router
     Router.init();

@@ -2,7 +2,14 @@ import { Loader } from './loader.js';
 import { stateManager } from './state.js';
 
 export const Router = {
+  htmlCache: {},
+  scrollMemory: {},
+  historyStack: [],
+
   init() {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
     window.addEventListener('popstate', this.handleRoute.bind(this));
     
     // Intercept all link clicks
@@ -23,9 +30,47 @@ export const Router = {
 
       // Intercept same-origin internal links
       e.preventDefault();
+      
+      // Save current state before navigating away
+      this.historyStack.push(window.location.pathname);
+      this.scrollMemory[window.location.pathname] = window.scrollY;
+
       history.pushState(null, '', anchor.href);
       this.handleRoute();
     });
+
+    // Hover Pre-fetching
+    document.body.addEventListener('mouseover', e => {
+      if (!Loader.config.hoverPrefetch) return;
+      const anchor = e.target.closest('a');
+      if (!anchor) return;
+      if (
+        anchor.origin === window.location.origin && 
+        anchor.target !== '_blank' && 
+        !anchor.hasAttribute('download') &&
+        !this.htmlCache[anchor.href]
+      ) {
+        this.htmlCache[anchor.href] = 'fetching'; // Prevent duplicate fetches
+        fetch(anchor.href)
+          .then(res => {
+             if (res.ok) return res.text();
+             throw new Error('Failed to prefetch');
+          })
+          .then(html => this.htmlCache[anchor.href] = html)
+          .catch(() => delete this.htmlCache[anchor.href]);
+      }
+    });
+  },
+
+  back() {
+    // Custom programmatic back button
+    if (this.historyStack.length > 0) {
+      const prevUrl = this.historyStack.pop();
+      history.pushState(null, '', prevUrl);
+      this.handleRoute();
+    } else {
+      history.back(); // Fallback to browser's native back
+    }
   },
 
   reload() {
@@ -45,8 +90,17 @@ export const Router = {
         await new Promise(r => setTimeout(r, Loader.config.transition.simulatedDelay / 2));
       }
 
-      const response = await fetch(url);
-      const htmlText = await response.text();
+      let htmlText;
+      const fullUrl = new URL(url, document.baseURI).href;
+      
+      if (Loader.config.hoverPrefetch && this.htmlCache[fullUrl] && this.htmlCache[fullUrl] !== 'fetching') {
+        htmlText = this.htmlCache[fullUrl];
+        Loader.log(`Used pre-fetched cache for ${url}`);
+      } else {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        htmlText = await response.text();
+      }
       
       stateManager.publish('ROUTE_PROGRESS', { url, progress: 50 });
 
@@ -110,32 +164,37 @@ export const Router = {
         transitionRoot.parentNode.removeChild(transitionRoot);
       }
 
-      // Brutal DOM swap (Fast, deeply nested support)
-      document.body.innerHTML = doc.body.innerHTML;
+      // The actual synchronous DOM swap and restoration
+      const executeDOMSwap = () => {
+        document.body.innerHTML = doc.body.innerHTML;
 
-      // Restore User Protected Elements into their exact new positions
-      preservedNodes.forEach(el => {
-        const newEl = document.getElementById(el.id);
-        if (newEl) {
-           // Sync attributes from the new HTML node so classes/styles update
-           Array.from(el.attributes).forEach(attr => {
-             if (attr.name !== 'id' && attr.name !== 'data-baremetal-preserve') el.removeAttribute(attr.name);
-           });
-           Array.from(newEl.attributes).forEach(attr => {
-             if (attr.name !== 'id') el.setAttribute(attr.name, attr.value);
-           });
-           
-           newEl.parentNode.replaceChild(el, newEl);
+        // Restore User Protected Elements into their exact new positions
+        preservedNodes.forEach(el => {
+          const newEl = document.getElementById(el.id);
+          if (newEl) {
+             // Sync attributes from the new HTML node so classes/styles update
+             Array.from(el.attributes).forEach(attr => {
+               if (attr.name !== 'id' && attr.name !== 'data-baremetal-preserve') el.removeAttribute(attr.name);
+             });
+             Array.from(newEl.attributes).forEach(attr => {
+               if (attr.name !== 'id') el.setAttribute(attr.name, attr.value);
+             });
+             
+             newEl.parentNode.replaceChild(el, newEl);
+          }
+        });
+
+        if (transitionRoot) {
+          document.body.appendChild(transitionRoot);
         }
-      });
 
-      if (transitionRoot) {
-        document.body.appendChild(transitionRoot);
-      }
+        // Notify keep-alive modules that the DOM has been swapped so they can re-bind UI elements
+        stateManager.publish('DOM_SWAPPED', null);
+      };
 
-      // Notify keep-alive modules that the DOM has been swapped so they can re-bind UI elements
-      // Done synchronously to prevent CSS transition flashes
-      stateManager.publish('DOM_SWAPPED', null);
+      // Execute DOM swap and restore scroll synchronously
+      executeDOMSwap();
+      window.scrollTo(0, this.scrollMemory[url] || 0);
 
       // 4. Mount new modules (this emits ROUTE_END)
       await Loader.loadPrepared(modulesToLoad);
