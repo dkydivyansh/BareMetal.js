@@ -14,6 +14,7 @@ const BareMetal = {
     if (config.transition !== undefined) Loader.setConfig({ transition: config.transition });
     if (config.autoWrap !== undefined) Loader.setConfig({ autoWrap: config.autoWrap });
     if (config.hoverPrefetch !== undefined) Loader.setConfig({ hoverPrefetch: config.hoverPrefetch });
+    if (config.showErrorNotification !== undefined) Loader.setConfig({ showErrorNotification: config.showErrorNotification });
 
     // Initialize Router
     Router.init();

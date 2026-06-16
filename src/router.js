@@ -202,6 +202,39 @@ export const Router = {
     } catch (err) {
       console.error("Routing error:", err);
       stateManager.publish('ROUTE_ERROR', { url, error: err.message });
+      
+      if (Loader.config.showErrorNotification) {
+        // Revert URL bar since we are aborting
+        if (this.historyStack.length > 0) {
+          const prev = this.historyStack.pop();
+          history.replaceState(null, '', prev);
+        }
+
+        // Show floating notification
+        const notif = document.createElement('div');
+        notif.style.position = 'fixed';
+        notif.style.bottom = '20px';
+        notif.style.left = '20px';
+        notif.style.background = '#e74c3c';
+        notif.style.color = 'white';
+        notif.style.padding = '15px 20px';
+        notif.style.borderRadius = '8px';
+        notif.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        notif.style.zIndex = '999999';
+        notif.style.fontFamily = 'sans-serif';
+        notif.style.transition = 'opacity 0.3s ease';
+        notif.innerHTML = `<strong>Navigation Failed:</strong> ${err.message}`;
+        
+        document.body.appendChild(notif);
+        
+        setTimeout(() => {
+          notif.style.opacity = '0';
+          setTimeout(() => notif.remove(), 300);
+        }, 4000);
+      } else {
+        // Formal redirect to let server handle the error
+        window.location.assign(url);
+      }
     }
   }
 };

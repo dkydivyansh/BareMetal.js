@@ -5,7 +5,8 @@ BareMetal.init({
   debug: false,
   keepAliveSameModules: true,
   autoWrap: false,
-  hoverPrefetch: true,
+  hoverPrefetch: false,
+  showErrorNotification: false,
   transition: {
     enabled: true,
     simulatedDelay: 500 // Adds a half-second artificial delay to see the progress bar in local dev

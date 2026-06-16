@@ -42,6 +42,7 @@ export function mount({ state }) {
   const unsubs = [];
 
   unsubs.push(state.on('ROUTE_START', () => {
+    progressBar.style.backgroundColor = '#3498db'; // Reset to blue
     progressBar.style.opacity = '1';
     progressBar.style.width = '5%';
     
