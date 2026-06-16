@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BareMetal Demo - Normal Page</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background-color: #f9f9f9; }
+    .nav { margin-bottom: 20px; padding: 10px; background: #eee; }
+    .nav a { margin-right: 15px; text-decoration: none; color: blue; }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <strong>Navigation:</strong>
+    <a href="/page1.html">Back to Page 1</a>
+  </div>
+
+  <h1>Welcome to Page 3 (Normal Page)</h1>
+  <p>This page <strong>does not</strong> contain a BareMetal <code>loader({...})</code> configuration.</p>
+  <p>Because of this, the BareMetal Router detected it and performed a standard browser navigation (hard reload) to get here.</p>
+
+  <p>Notice that your translation counter from Page 1 and 2 has been reset because we left the SPA environment!</p>
+
+</body>
+</html>

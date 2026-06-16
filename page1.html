@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BareMetal Demo - Page 1</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    #sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 250px;
+      background-color: #2c3e50;
+      color: white;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      padding-top: 15px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #sidebar-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 15px;
+      color: #ecf0f1;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .nav-links a:hover {
+      background-color: #34495e;
+    }
+
+    #main-content {
+      margin-left: 250px; /* default expanded */
+      padding: 30px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .widget {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .shared {
+      border-left: 4px solid #27ae60;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="sidebar">
+    <button id="sidebar-toggle">☰</button>
+    <div class="nav-links">
+      <a href="/page1.html" data-link>Page 1</a>
+      <a href="/page2.html" data-link>Page 2</a>
+      <a href="/page3_normal.html">Page 3 (No SPA)</a>
+      <a href="https://example.com" target="_blank">External</a>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <h1>Welcome to Page 1</h1>
+    <p>This page uses a shared Translation Checker module, a Sidebar, and a specific Page 1 module.</p>
+
+    <div id="shared-widget" class="widget shared">
+      <h3>Shared Translation Module</h3>
+      <p>Translation count: <span id="trans-count">0</span></p>
+      <button id="btn-translate">Simulate Translation</button>
+    </div>
+
+    <div id="page1-widget" class="widget">
+      <h3>Page 1 Specific Module</h3>
+      <p>This module only exists on Page 1 and will be destroyed when navigating away.</p>
+    </div>
+  </div>
+
+  <div id="media-container" style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 1000; border-radius: 8px; transition: all 0.5s ease;">
+    <h4 style="margin-top:0; margin-bottom: 10px;">Uninterrupted Native Media</h4>
+    <video id="demo-video" data-baremetal-preserve width="300" controls autoplay muted loop>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Your browser does not support HTML video.
+    </video>
+    <br/>
+    <audio id="demo-audio" data-baremetal-preserve controls style="width: 300px; margin-top: 10px;">
+      <source src="./darren_hirst-20-474737.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <!-- BareMetal Engine -->
+  <script type="module" src="./main.js"></script>
+
+  <!-- Page Configuration -->
+  <script type="module">
+    import { loader } from './src/index.js';
+    loader({
+      sidebar: "/js/sidebar.js",
+      shared: "/js/shared.js",
+      page1: "/js/page1_specific.js",
+      mediaPlayer: "/js/media_player.js"
+    });
+  </script>
+
+</body>
+
+</html>
