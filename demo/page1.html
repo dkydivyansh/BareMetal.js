@@ -73,11 +73,11 @@
 <body>
 
   <div id="sidebar">
-    <button id="sidebar-toggle">☰</button>
+    <button id="sidebar-toggle">&#9776;</button>
     <div class="nav-links">
-      <a href="/page1.html" data-link>Page 1</a>
-      <a href="/page2.html" data-link>Page 2</a>
-      <a href="/page3_normal.html">Page 3 (No SPA)</a>
+      <a href="/demo/page1.html" data-link>Page 1</a>
+      <a href="/demo/page2.html" data-link>Page 2</a>
+      <a href="/demo/page3_normal.html">Page 3 (No SPA)</a>
       <a href="https://example.com" target="_blank">External</a>
     </div>
   </div>
@@ -115,7 +115,7 @@
     </video>
     <br />
     <audio id="demo-audio" data-baremetal-preserve controls style="width: 300px; margin-top: 10px;">
-      <source src="./darren_hirst-20-474737.mp3" type="audio/mpeg">
+      <source src="./assets/audio/darren_hirst-20-474737.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
   </div>
@@ -125,12 +125,12 @@
 
   <!-- Page Configuration -->
   <script type="module">
-    import { loader } from './src/index.js';
+    import { loader } from '../src/index.js';
     loader({
-      sidebar: "/js/sidebar.js",
-      shared: "/js/shared.js",
-      page1: "/js/page1_specific.js",
-      mediaPlayer: "/js/media_player.js"
+      sidebar: "/demo/assets/js/sidebar.js",
+      shared: "/demo/assets/js/shared.js",
+      page1: "/demo/assets/js/page1_specific.js",
+      mediaPlayer: "/demo/assets/js/media_player.js"
     });
   </script>
 

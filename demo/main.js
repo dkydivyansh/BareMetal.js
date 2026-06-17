@@ -1,4 +1,4 @@
-import { BareMetal } from './src/index.js';
+import { BareMetal } from '../src/index.js';
 
 // Initialize the BareMetal engine with our desired config
 BareMetal.init({
