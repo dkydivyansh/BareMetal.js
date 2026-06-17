@@ -38,7 +38,7 @@ To run the project locally:
 
 1. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/BareMetal.js.git
+   git clone https://github.com/dkydivyansh/BareMetal.js.git
    ```
 2. Navigate to the project directory:
    ```bash
