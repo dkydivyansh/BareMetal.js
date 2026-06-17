@@ -1,0 +1,29 @@
+{
+  "name": "baremetal.js",
+  "version": "1.0.0",
+  "description": "A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkydivyansh/BareMetal.js.git"
+  },
+  "keywords": [
+    "spa",
+    "vanilla",
+    "framework",
+    "router",
+    "state-management",
+    "baremetal",
+    "performance"
+  ],
+  "author": "Divyansh",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dkydivyansh/BareMetal.js/issues"
+  },
+  "homepage": "https://BareMetal.dkydivyansh.com"
+}
