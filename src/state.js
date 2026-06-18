@@ -1,10 +1,3 @@
-/**
- * baremetal.js v1.2.1
- * A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.
- * (c) 2026 dkydivyansh
- * Released under the GPL-3.0 License
- */
-
 class StateManager {
   constructor() {
     this.state = {};
@@ -59,7 +52,7 @@ class StateManager {
     if (window.__baremetal_persist_state) {
       try {
         sessionStorage.setItem('baremetal_state', JSON.stringify(this.state));
-      } catch(e) {}
+      } catch (e) { }
     }
   }
 

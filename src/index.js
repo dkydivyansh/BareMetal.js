@@ -1,10 +1,3 @@
-/**
- * baremetal.js v1.2.1
- * A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.
- * (c) 2026 dkydivyansh
- * Released under the GPL-3.0 License
- */
-
 import { stateManager } from './state.js';
 import { Loader, loader } from './loader.js';
 import { Router } from './router.js';
