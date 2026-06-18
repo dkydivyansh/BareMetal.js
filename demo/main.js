@@ -2,7 +2,7 @@ import { BareMetal } from '../src/index.js';
 
 // Initialize the BareMetal engine with our desired config
 BareMetal.init({
-  debug: false,
+  debug: true,
   keepAliveSameModules: true,
   autoWrap: false,
   hoverPrefetch: false,

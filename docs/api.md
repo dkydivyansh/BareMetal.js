@@ -15,10 +15,33 @@ Initializes the engine, sets up the Router, and binds global configurations.
   - `config.transition.enabled` *(boolean)*: Enables the protected transition module.
   - `config.transition.module` *(string)*: Optional path to a custom transition module (defaults to `/src/transition.js`).
   - `config.transition.simulatedDelay` *(number)*: Optional artificial delay in milliseconds (useful for testing animations locally).
+  - `config.transition.useViewTransitions` *(boolean)*: Enables the native View Transitions API for smooth cross-fades during navigation (default: `false`).
+- `config.offline` *(object)*: Configuration for offline Progressive Web App (PWA) support.
+  - `config.offline.enabled` *(boolean)*: Enables Service Worker registration (default: `false`).
+  - `config.offline.version` *(string)*: Version identifier for the offline cache (e.g., `'1.0.0'`). Bump this to push updates to users.
+  - `config.offline.installType` *(string)*: `'auto'` (installs silently), `'consent'` (shows a popup), or `'custom'` (triggered manually via `BareMetal.offline.install()`).
+  - `config.offline.delay` *(number)*: Milliseconds to wait before auto-install or showing the consent popup.
+  - `config.offline.showInfo` *(boolean)*: If true, displays themed toast notifications at the bottom left during installation/updates.
+  - `config.offline.assets` *(string[])*: An array of URLs to strictly pre-cache upon installation.
 
 ---
 
-## 2. Router Navigation
+## 2. Offline Manager
+
+Accessible via `BareMetal.offline` when enabled.
+
+### `offline.install()`
+Manually triggers the background download of all resources specified in `config.offline.assets`.
+
+### `offline.update()`
+Triggers a background fetch to update the cached assets based on the current `config.offline.version`.
+
+### `offline.remove()`
+Unregisters the Service Worker and deletes all offline caches.
+
+---
+
+## 3. Router Navigation
 
 ### `BareMetal.router.reload()`
 Executes a hard reload of the current SPA page by calling `window.location.reload()`. This is useful when you want to force the browser to wipe the entire SPA state and fetch fresh assets.

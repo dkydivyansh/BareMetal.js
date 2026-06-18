@@ -22,7 +22,23 @@ BareMetal.js is designed to bring Single Page Application (SPA) functionality to
 
 ### Installation
 
-No installation required! Just clone the repository or copy the `src` folder into your project.
+**Option 1: Using npm**
+If you are using a bundler (like Vite, Webpack) or modern Node.js environments:
+```bash
+npm install baremetal.js
+```
+```javascript
+import { BareMetal, loader } from 'baremetal.js';
+```
+
+**Option 2: Using jsDelivr CDN**
+To use the latest version directly in the browser without any build tools, import it via CDN:
+```javascript
+import { BareMetal, loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/src/index.js';
+```
+
+**Option 3: Manual Download**
+Just clone the repository or copy the `src` folder directly into your project.
 
 ### Running the Demo
 
@@ -122,6 +138,8 @@ The `BareMetal.init(config)` method accepts the following configuration object:
 | `transition.enabled` | boolean | `false` | Enable the protected transition module. |
 | `transition.module` | string | `null` | Path to a custom transition module. |
 | `transition.simulatedDelay` | number | `0` | Artificial delay (ms) for testing transitions. |
+| `offline` | object | `{}` | Configure offline service worker support. See API docs for details. |
+| `transition.useViewTransitions` | boolean | `false` | Enables the native View Transitions API for smooth cross-fades during navigation. |
 
 ## API Reference
 

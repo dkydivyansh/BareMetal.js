@@ -2,7 +2,7 @@ import { stateManager } from './state.js';
 
 export const Loader = {
   activeModules: {}, // { key: { path: "./dash.js", module: exportedModule } }
-  config: { keepAliveSameModules: true, debug: false, autoWrap: true, hoverPrefetch: false, showErrorNotification: false, transition: { enabled: false, simulatedDelay: 0, module: null } },
+  config: { keepAliveSameModules: true, debug: false, autoWrap: true, hoverPrefetch: false, showErrorNotification: false, transition: { enabled: false, simulatedDelay: 0, module: null, useViewTransitions: false } },
   
   setConfig(globalConfig) {
     this.config = { ...this.config, ...globalConfig };
@@ -74,14 +74,14 @@ export const Loader = {
       this.log(`Importing module: ${path}`);
       try {
         const resolvedPath = new URL(path, document.baseURI).href;
-        const noCachePath = `${resolvedPath}?t=${Date.now()}`;
+        const loadPath = this.config.debug ? `${resolvedPath}?t=${Date.now()}` : resolvedPath;
         
         let module;
 
         if (this.config.autoWrap) {
           // Fetch source to check if it needs auto-wrapping
-          const response = await fetch(noCachePath);
-          if (!response.ok) throw new Error(`Failed to fetch ${noCachePath}`);
+          const response = await fetch(loadPath);
+          if (!response.ok) throw new Error(`Failed to fetch ${loadPath}`);
           const sourceText = await response.text();
 
           const hasMount = /export\s+(function|const|let|var)\s+mount\b/.test(sourceText) || /export\s+\{.*?\bmount\b.*?\}/.test(sourceText);
@@ -101,11 +101,11 @@ export const Loader = {
             module = await import(blobUrl);
             URL.revokeObjectURL(blobUrl);
           } else {
-            module = await import(noCachePath);
+            module = await import(loadPath);
           }
         } else {
           // Auto-wrapping disabled, load natively
-          module = await import(noCachePath);
+          module = await import(loadPath);
         }
         
         if (typeof module.mount === 'function') {

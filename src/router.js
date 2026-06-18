@@ -192,9 +192,18 @@ export const Router = {
         stateManager.publish('DOM_SWAPPED', null);
       };
 
-      // Execute DOM swap and restore scroll synchronously
-      executeDOMSwap();
-      window.scrollTo(0, this.scrollMemory[url] || 0);
+      const doSwap = () => {
+        executeDOMSwap();
+        window.scrollTo(0, this.scrollMemory[url] || 0);
+      };
+
+      if (Loader.config.transition && Loader.config.transition.useViewTransitions && document.startViewTransition) {
+        document.startViewTransition(() => {
+          doSwap();
+        });
+      } else {
+        doSwap();
+      }
 
       // 4. Mount new modules (this emits ROUTE_END)
       await Loader.loadPrepared(modulesToLoad);
@@ -233,6 +242,11 @@ export const Router = {
         }, 4000);
       } else {
         // Formal redirect to let server handle the error
+        // FIRST: Undo the pushState so we don't leave a phantom history entry that breaks the Back button!
+        if (this.historyStack.length > 0) {
+          const prev = this.historyStack.pop();
+          history.replaceState(null, '', prev);
+        }
         window.location.assign(url);
       }
     }
