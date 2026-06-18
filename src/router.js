@@ -1,3 +1,10 @@
+/**
+ * baremetal.js v1.2.1
+ * A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.
+ * (c) 2026 dkydivyansh
+ * Released under the GPL-3.0 License
+ */
+
 import { Loader } from './loader.js';
 import { stateManager } from './state.js';
 
@@ -5,33 +12,30 @@ export const Router = {
   htmlCache: {},
   scrollMemory: {},
   historyStack: [],
+  currentAbortController: null,
 
   init() {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
     window.addEventListener('popstate', this.handleRoute.bind(this));
-    
-    // Intercept all link clicks
+
     document.body.addEventListener('click', e => {
-      // Find closest anchor tag
+
       const anchor = e.target.closest('a');
       if (!anchor) return;
 
-      // Ignore external domains, target="_blank", noreferrer, or downloads
       if (
-        anchor.origin !== window.location.origin || 
+        anchor.origin !== window.location.origin ||
         anchor.target === '_blank' ||
         (anchor.rel && anchor.rel.includes('noreferrer')) ||
         anchor.hasAttribute('download')
       ) {
-        return; // Let browser handle it naturally
+        return;
       }
 
-      // Intercept same-origin internal links
       e.preventDefault();
-      
-      // Save current state before navigating away
+
       this.historyStack.push(window.location.pathname);
       this.scrollMemory[window.location.pathname] = window.scrollY;
 
@@ -39,18 +43,17 @@ export const Router = {
       this.handleRoute();
     });
 
-    // Hover Pre-fetching
     document.body.addEventListener('mouseover', e => {
       if (!Loader.config.hoverPrefetch) return;
       const anchor = e.target.closest('a');
       if (!anchor) return;
       if (
-        anchor.origin === window.location.origin && 
-        anchor.target !== '_blank' && 
+        anchor.origin === window.location.origin &&
+        anchor.target !== '_blank' &&
         !anchor.hasAttribute('download') &&
         !this.htmlCache[anchor.href]
       ) {
-        this.htmlCache[anchor.href] = 'fetching'; // Prevent duplicate fetches
+        this.htmlCache[anchor.href] = 'fetching';
         fetch(anchor.href)
           .then(res => {
              if (res.ok) return res.text();
@@ -63,13 +66,13 @@ export const Router = {
   },
 
   back() {
-    // Custom programmatic back button
+
     if (this.historyStack.length > 0) {
       const prevUrl = this.historyStack.pop();
       history.pushState(null, '', prevUrl);
       this.handleRoute();
     } else {
-      history.back(); // Fallback to browser's native back
+      history.back();
     }
   },
 
@@ -77,7 +80,14 @@ export const Router = {
     window.location.reload();
   },
 
-  async handleRoute() {
+  async handleRoute(e) {
+
+    if (this.currentAbortController) {
+      this.currentAbortController.abort();
+    }
+    this.currentAbortController = new AbortController();
+    const signal = this.currentAbortController.signal;
+
     const url = window.location.pathname;
     try {
       Loader.log(`Navigating to ${url}`);
@@ -92,31 +102,30 @@ export const Router = {
 
       let htmlText;
       const fullUrl = new URL(url, document.baseURI).href;
-      
+
       if (Loader.config.hoverPrefetch && this.htmlCache[fullUrl] && this.htmlCache[fullUrl] !== 'fetching') {
         htmlText = this.htmlCache[fullUrl];
         Loader.log(`Used pre-fetched cache for ${url}`);
       } else {
-        const response = await fetch(url);
+        const response = await fetch(url, { signal });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         htmlText = await response.text();
       }
-      
+
       stateManager.publish('ROUTE_PROGRESS', { url, progress: 50 });
 
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlText, 'text/html');
-      
-      // 1. Extract Config
+
       let config = null;
       const scriptTags = doc.querySelectorAll('script');
       for (const script of scriptTags) {
         if (script.textContent.includes('loader(')) {
-          // Extract the JSON-like object from loader({...})
+
           const match = script.textContent.match(/loader\s*\(\s*(\{[\s\S]*?\})\s*\)/);
           if (match && match[1]) {
             try {
-              // Using Function to safely parse object string that might not be strict JSON
+
               config = new Function('return ' + match[1])();
             } catch (e) {
               console.error("Failed to parse loader config in new page", e);
@@ -125,61 +134,53 @@ export const Router = {
         }
       }
 
-      // If no BareMetal loader config is found, fallback to standard navigation
       if (!config) {
         Loader.log(`No BareMetal config found on ${url}. Falling back to native navigation.`);
         window.location.assign(url);
         return;
       }
 
-      // 2. Prepare transition: identify kept vs destroyed modules
       const modulesToLoad = await Loader.prepare(config);
 
-      // 3. Swap DOM and Head
       document.title = doc.title;
-      
-      // Swap Head Styles (prevent CSS leak)
+
       const oldStyles = document.head.querySelectorAll('link[data-baremetal="style"], style[data-baremetal="style"]');
       oldStyles.forEach(s => s.remove());
       const newStyles = doc.head.querySelectorAll('link[data-baremetal="style"], style[data-baremetal="style"]');
       newStyles.forEach(s => document.head.appendChild(s.cloneNode(true)));
 
-      // User Protected Elements (data-baremetal-preserve)
       const preservedNodes = [];
       const persistentElements = document.querySelectorAll('[data-baremetal-preserve]');
-      
+
       persistentElements.forEach(el => {
         if (!el.id) return;
         if (doc.getElementById(el.id)) {
-           // Synchronously detach the live node
+
            const placeholder = document.createElement('div');
            el.parentNode.replaceChild(placeholder, el);
            preservedNodes.push(el);
         }
       });
 
-      // Engine Protected Elements (Immortal)
       const transitionRoot = document.getElementById('baremetal-transition-root');
       if (transitionRoot) {
         transitionRoot.parentNode.removeChild(transitionRoot);
       }
 
-      // The actual synchronous DOM swap and restoration
       const executeDOMSwap = () => {
         document.body.innerHTML = doc.body.innerHTML;
 
-        // Restore User Protected Elements into their exact new positions
         preservedNodes.forEach(el => {
           const newEl = document.getElementById(el.id);
           if (newEl) {
-             // Sync attributes from the new HTML node so classes/styles update
+
              Array.from(el.attributes).forEach(attr => {
                if (attr.name !== 'id' && attr.name !== 'data-baremetal-preserve') el.removeAttribute(attr.name);
              });
              Array.from(newEl.attributes).forEach(attr => {
                if (attr.name !== 'id') el.setAttribute(attr.name, attr.value);
              });
-             
+
              newEl.parentNode.replaceChild(el, newEl);
           }
         });
@@ -188,7 +189,6 @@ export const Router = {
           document.body.appendChild(transitionRoot);
         }
 
-        // Notify keep-alive modules that the DOM has been swapped so they can re-bind UI elements
         stateManager.publish('DOM_SWAPPED', null);
       };
 
@@ -205,21 +205,23 @@ export const Router = {
         doSwap();
       }
 
-      // 4. Mount new modules (this emits ROUTE_END)
       await Loader.loadPrepared(modulesToLoad);
 
     } catch (err) {
+      if (err.name === 'AbortError') {
+        Loader.log(`Aborted fetch for ${url} due to new navigation.`);
+        return;
+      }
       console.error("Routing error:", err);
       stateManager.publish('ROUTE_ERROR', { url, error: err.message });
-      
+
       if (Loader.config.showErrorNotification) {
-        // Revert URL bar since we are aborting
+
         if (this.historyStack.length > 0) {
           const prev = this.historyStack.pop();
           history.replaceState(null, '', prev);
         }
 
-        // Show floating notification
         const notif = document.createElement('div');
         notif.style.position = 'fixed';
         notif.style.bottom = '20px';
@@ -233,16 +235,15 @@ export const Router = {
         notif.style.fontFamily = 'sans-serif';
         notif.style.transition = 'opacity 0.3s ease';
         notif.innerHTML = `<strong>Navigation Failed:</strong> ${err.message}`;
-        
+
         document.body.appendChild(notif);
-        
+
         setTimeout(() => {
           notif.style.opacity = '0';
           setTimeout(() => notif.remove(), 300);
         }, 4000);
       } else {
-        // Formal redirect to let server handle the error
-        // FIRST: Undo the pushState so we don't leave a phantom history entry that breaks the Back button!
+
         if (this.historyStack.length > 0) {
           const prev = this.historyStack.pop();
           history.replaceState(null, '', prev);

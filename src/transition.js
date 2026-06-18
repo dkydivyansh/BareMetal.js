@@ -1,7 +1,13 @@
+/**
+ * baremetal.js v1.2.1
+ * A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.
+ * (c) 2026 dkydivyansh
+ * Released under the GPL-3.0 License
+ */
+
 export function mount({ state }) {
   console.log('[Transition Module] Mounted');
 
-  // Create Protected Root
   let root = document.getElementById('baremetal-transition-root');
   if (!root) {
     root = document.createElement('div');
@@ -9,20 +15,18 @@ export function mount({ state }) {
     document.body.appendChild(root);
   }
 
-  // Create Progress Bar
   const progressBar = document.createElement('div');
   progressBar.style.position = 'fixed';
   progressBar.style.top = '0';
   progressBar.style.left = '0';
   progressBar.style.height = '3px';
-  progressBar.style.backgroundColor = '#3498db'; // YouTube blue-ish
+  progressBar.style.backgroundColor = '#3498db';
   progressBar.style.width = '0%';
   progressBar.style.zIndex = '999999';
   progressBar.style.transition = 'width 0.2s ease-out, opacity 0.3s ease';
   progressBar.style.opacity = '0';
   progressBar.style.pointerEvents = 'none';
 
-  // Create Fade Overlay
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.top = '0';
@@ -38,15 +42,14 @@ export function mount({ state }) {
   root.appendChild(overlay);
   root.appendChild(progressBar);
 
-  // Subscriptions
   const unsubs = [];
 
   unsubs.push(state.on('ROUTE_START', () => {
-    progressBar.style.backgroundColor = '#3498db'; // Reset to blue
+    progressBar.style.backgroundColor = '#3498db';
     progressBar.style.opacity = '1';
     progressBar.style.width = '5%';
-    
-    overlay.style.pointerEvents = 'all'; // block clicks during load
+
+    overlay.style.pointerEvents = 'all';
     overlay.style.opacity = '1';
   }));
 
@@ -58,13 +61,12 @@ export function mount({ state }) {
 
   unsubs.push(state.on('ROUTE_END', () => {
     progressBar.style.width = '100%';
-    
+
     setTimeout(() => {
       progressBar.style.opacity = '0';
       overlay.style.opacity = '0';
       overlay.style.pointerEvents = 'none';
-      
-      // Reset after fade out
+
       setTimeout(() => {
         progressBar.style.width = '0%';
       }, 300);
@@ -72,7 +74,7 @@ export function mount({ state }) {
   }));
 
   unsubs.push(state.on('ROUTE_ERROR', () => {
-    progressBar.style.backgroundColor = '#e74c3c'; // red
+    progressBar.style.backgroundColor = '#e74c3c';
     setTimeout(() => {
       progressBar.style.opacity = '0';
       overlay.style.opacity = '0';

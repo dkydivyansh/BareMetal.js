@@ -1,11 +1,22 @@
 {
   "name": "baremetal.js",
-  "version": "1.0.1",
+  "version": "1.2.1",
   "description": "A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.",
   "main": "src/index.js",
   "type": "module",
+  "files": [
+    "src",
+    "dist",
+    "LICENSE",
+    "CHANGELOG.md",
+    "docs/api.md",
+    "README.md",
+    "SECURITY.md"
+  ],
   "scripts": {
-    "test": "echo \"No tests written yet.\" && exit 0"
+    "build": "rollup -c",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -20,10 +31,16 @@
     "baremetal",
     "performance"
   ],
-  "author": "Divyansh",
+  "author": "dkydivyansh",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/dkydivyansh/BareMetal.js/issues"
   },
-  "homepage": "https://BareMetal.dkydivyansh.com"
+  "homepage": "https://BareMetal.dkydivyansh.com",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^1.0.0",
+    "jsdom": "^29.1.1",
+    "rollup": "^4.62.0",
+    "vitest": "^4.1.9"
+  }
 }

@@ -7,41 +7,25 @@ BareMetal exports its core engine as a global configuration object. Here are the
 ### `BareMetal.init(config)`
 Initializes the engine, sets up the Router, and binds global configurations.
 
-**Parameters:**
-- `config.debug` *(boolean)*: Enable verbose console logs (default: `false`).
-- `config.keepAliveSameModules` *(boolean)*: If true, modules shared between routes are not destroyed during navigation (default: `true`).
-- `config.autoWrap` *(boolean)*: If true, modules that do not export a `mount` function are automatically wrapped in a dynamic Blob URL to prevent syntax errors (default: `true`).
-- `config.transition` *(object)*: Configuration for the native page transition API.
-  - `config.transition.enabled` *(boolean)*: Enables the protected transition module.
-  - `config.transition.module` *(string)*: Optional path to a custom transition module (defaults to `/src/transition.js`).
-  - `config.transition.simulatedDelay` *(number)*: Optional artificial delay in milliseconds (useful for testing animations locally).
-  - `config.transition.useViewTransitions` *(boolean)*: Enables the native View Transitions API for smooth cross-fades during navigation (default: `false`).
-- `config.offline` *(object)*: Configuration for offline Progressive Web App (PWA) support.
-  - `config.offline.enabled` *(boolean)*: Enables Service Worker registration (default: `false`).
-  - `config.offline.version` *(string)*: Version identifier for the offline cache (e.g., `'1.0.0'`). Bump this to push updates to users.
-  - `config.offline.installType` *(string)*: `'auto'` (installs silently), `'consent'` (shows a popup), or `'custom'` (triggered manually via `BareMetal.offline.install()`).
-  - `config.offline.delay` *(number)*: Milliseconds to wait before auto-install or showing the consent popup.
-  - `config.offline.showInfo` *(boolean)*: If true, displays themed toast notifications at the bottom left during installation/updates.
-  - `config.offline.assets` *(string[])*: An array of URLs to strictly pre-cache upon installation.
+**Configuration Reference:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `debug` | boolean | `false` | Enable verbose console logs. |
+| `keepAliveSameModules` | boolean | `true` | Prevent destruction of modules shared between routes. |
+| `autoWrap` | boolean | `true` | Automatically wrap modules that do not export a `mount` function. |
+| `hoverPrefetch` | boolean | `false` | Enable 0ms latency pre-fetching on link hover. |
+| `persistState` | boolean | `false` | Automatically serialize `stateManager` to `sessionStorage` for F5 resilience. |
+| `virtualizeDom` | boolean | `false` | Inject the `Virtualizer` helper into module mount contexts. |
+| `showErrorNotification` | boolean | `false` | Enable floating error boundaries on navigation failures. |
+| `transition.enabled` | boolean | `false` | Enable the protected transition module. |
+| `transition.module` | string | `null` | Path to a custom transition module (defaults to `/src/transition.js`). |
+| `transition.simulatedDelay` | number | `0` | Artificial delay (ms) for testing transitions. |
+| `transition.useViewTransitions` | boolean | `false` | Enables the native View Transitions API for smooth cross-fades during navigation. |
 
 ---
 
-## 2. Offline Manager
-
-Accessible via `BareMetal.offline` when enabled.
-
-### `offline.install()`
-Manually triggers the background download of all resources specified in `config.offline.assets`.
-
-### `offline.update()`
-Triggers a background fetch to update the cached assets based on the current `config.offline.version`.
-
-### `offline.remove()`
-Unregisters the Service Worker and deletes all offline caches.
-
----
-
-## 3. Router Navigation
+## 2. Router Navigation
 
 ### `BareMetal.router.reload()`
 Executes a hard reload of the current SPA page by calling `window.location.reload()`. This is useful when you want to force the browser to wipe the entire SPA state and fetch fresh assets.
@@ -78,7 +62,7 @@ Listens for a Pub/Sub event.
 
 ---
 
-## 5. Writing Custom Page Transitions
+## 4. Writing Custom Page Transitions
 
 You can replace the default progress bar and fade overlay by pointing `config.transition.module` to your own JavaScript file. A custom transition is just a standard BareMetal module that listens to routing events.
 
@@ -128,5 +112,3 @@ export function mount({ state }) {
   };
 }
 ```
-
-

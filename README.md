@@ -10,8 +10,23 @@ BareMetal.js is designed to bring Single Page Application (SPA) functionality to
 
 ## Key Features
 
-- **Hover Pre-fetching (0ms Latency):** BareMetal anticipates user actions by fetching HTML in the background when a user hovers over an internal link, resulting in instant transitions upon click.
-- **Smart Module Keep-Alive:** Share state and complex UI modules across page transitions without destroying them. Native `<video>` and `<audio>` tags can be preserved and re-injected into the new DOM seamlessly.
+### Hover Pre-fetching (0ms Latency)
+BareMetal anticipates user actions. When a user hovers over an internal link, the engine instantly fetches the HTML in the background. By the time they click, the page is already cached, resulting in instantaneous, zero-latency transitions.
+
+### Auto-Request Cancellation
+If a user is frantically clicking links, BareMetal won't clog up their network. The Router automatically utilizes the `AbortController` API to cancel any pending `fetch` requests as soon as a new navigation is triggered, saving bandwidth and preventing race conditions.
+
+### Smart Module Keep-Alive
+Share state and complex UI modules (like persistent sidebars or floating media players) across page transitions without destroying them. Native `<video>` and `<audio>` tags are preserved and re-injected into the new DOM layout without interrupting playback!
+
+### Component Lazy Loading
+Load heavy widgets only when they scroll into view! The Loader supports an `IntersectionObserver` API out of the box. Just pass a `lazy` CSS selector to the `loader({ widget: { path: './widget.js', lazy: '#widget' } })` and it defers downloading and execution until the user actually sees it.
+
+### State Hydration (F5 Resilience)
+Never lose state on a hard reload again. If enabled, BareMetal automatically serializes the `stateManager` to `sessionStorage` in real-time. If the user hits F5, the engine instantly hydrates the state and bounces right back to where they were!
+
+### DOM Virtualization Helper
+Rendering 10,000 table rows? BareMetal exposes a `Virtualizer` class that recycles DOM nodes to render massive lists with zero jank. When enabled globally, the engine automatically injects the `virtualize` helper directly into your module's `mount` context!.
 - **Scroll Memory & Programmatic Back:** Maintains a persistent history stack, restoring your exact scroll depth instantly when navigating backward.
 - **Reactive State Management:** Includes a built-in publish/subscribe Signals pattern, preventing race conditions and keeping your UI synced.
 - **Custom Page Transitions:** Build and integrate your own loading animations and transition effects hooking into the routing lifecycle.
@@ -34,7 +49,7 @@ import { BareMetal, loader } from 'baremetal.js';
 **Option 2: Using jsDelivr CDN**
 To use the latest version directly in the browser without any build tools, import it via CDN:
 ```javascript
-import { BareMetal, loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/src/index.js';
+import { BareMetal, loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
 ```
 
 **Option 3: Manual Download**
@@ -52,25 +67,6 @@ npx serve .
 
 Then visit: `http://localhost:3000/demo/page1.html`
 
-## Project Structure
-
-```
-├── src/                        # The BareMetal Engine Source Code
-│   ├── index.js
-│   ├── router.js
-│   ├── loader.js
-│   ├── state.js
-│   └── transition.js
-├── demo/                       # Demo Application
-│   ├── page1.html
-│   ├── page2.html
-│   ├── page3_normal.html
-│   ├── main.js
-│   └── assets/                 # Page-specific widgets and media
-├── docs/
-│   └── api.md                  # Comprehensive API Reference
-```
-
 ## Usage
 
 ### 1. Engine Initialization
@@ -85,6 +81,9 @@ BareMetal.init({
   keepAliveSameModules: true,
   autoWrap: false,
   hoverPrefetch: true,       // 0ms Latency Pre-fetching
+  persistState: true,        // F5 Resilience
+  virtualizeDom: true,       // Inject virtualizer
+  showErrorNotification: true, // Error Boundaries
   transition: {
     enabled: true,
     simulatedDelay: 0
@@ -125,25 +124,21 @@ On your HTML pages, instruct BareMetal on which modules are required for that sp
 </script>
 ```
 
-## Configuration Reference
+### Lazy Loading a Component
 
-The `BareMetal.init(config)` method accepts the following configuration object:
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `debug` | boolean | `false` | Enable verbose console logs. |
-| `keepAliveSameModules` | boolean | `true` | Prevent destruction of modules shared between routes. |
-| `autoWrap` | boolean | `true` | Automatically wrap modules that do not export a `mount` function. |
-| `hoverPrefetch` | boolean | `false` | Enable 0ms latency pre-fetching on link hover. |
-| `transition.enabled` | boolean | `false` | Enable the protected transition module. |
-| `transition.module` | string | `null` | Path to a custom transition module. |
-| `transition.simulatedDelay` | number | `0` | Artificial delay (ms) for testing transitions. |
-| `offline` | object | `{}` | Configure offline service worker support. See API docs for details. |
-| `transition.useViewTransitions` | boolean | `false` | Enables the native View Transitions API for smooth cross-fades during navigation. |
+```html
+<script type="module">
+  import { loader } from './src/index.js';
+  loader({
+    sharedSidebar: "./js/sidebar.js",
+    heavyChart: { path: "./js/chart.js", lazy: "#chart-container" } // Only loads when visible!
+  });
+</script>
+```
 
 ## API Reference
 
-For detailed documentation on the Router, State Manager, and Events, please see the [API Documentation](docs/api.md).
+For detailed documentation on the Configuration, Router, State Manager, and Events, please see the [API Documentation](docs/api.md).
 
 ## Custom Transitions
 
