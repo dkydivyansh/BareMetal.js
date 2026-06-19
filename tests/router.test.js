@@ -9,10 +9,11 @@ describe('Router', () => {
     vi.clearAllMocks();
     Router.historyStack = [];
     Router.currentAbortController = null;
+    Router.lastPathAndSearch = '';
     
     // Polyfill window.location for JSDOM
     delete window.location;
-    window.location = { pathname: '/page1', reload: vi.fn() };
+    window.location = { pathname: '/page1', search: '', reload: vi.fn() };
   });
 
   it('should initialize popstate listener', () => {
@@ -30,11 +31,13 @@ describe('Router', () => {
     global.fetch = vi.fn().mockImplementation(() => new Promise(() => {}));
     
     // Fake the first route request
+    window.location.pathname = '/page2';
     Router.handleRoute(new Event('popstate'));
     const firstController = Router.currentAbortController;
     expect(firstController).not.toBeNull();
     
     // Fake a second rapid route request while the first fetch is hanging
+    window.location.pathname = '/page3';
     Router.handleRoute(new Event('popstate'));
     const secondController = Router.currentAbortController;
     
