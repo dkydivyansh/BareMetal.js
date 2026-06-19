@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>BareMetal.js - The Web, Unchained.</title>
+
+  <!-- SEO & OpenGraph Meta Tags -->
+  <meta name="description" content="BareMetal.js - The Web, Unchained. A hyper-fast brutalist SPA engine." />
+  <meta property="og:title" content="BareMetal.js - Home" />
+  <meta property="og:description" content="BareMetal.js - The Web, Unchained. A hyper-fast brutalist SPA engine." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://baremetal.dkydivyansh.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script type="module" src="config.js"></script>
+
+  <style>
+    .scanlines {
+      background: linear-gradient(to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.05) 50%,
+          rgba(0, 0, 0, 0.05));
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    .brutalist-border {
+      border: 1px solid #222222;
+    }
+
+    .brutalist-button-primary {
+      background-color: #7b39fc;
+      /* primary-fixed */
+      color: #ffffff;
+      /* on-primary-fixed */
+      border: 1px solid #ffffff;
+      box-shadow: 4px 4px 0px #ffffff;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .brutalist-button-primary:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #ffffff;
+    }
+
+    .brutalist-button-primary:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0px 0px 0px #ffffff;
+    }
+
+    .brutalist-button-secondary {
+      background-color: transparent;
+      color: #ffffff;
+      /* primary */
+      border: 1px solid #ffffff;
+      box-shadow: 4px 4px 0px #ffffff;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .brutalist-button-secondary:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #ffffff;
+    }
+
+    .brutalist-button-secondary:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0px 0px 0px #ffffff;
+    }
+
+    .brutalist-card {
+      border: 1px solid #222222;
+      background-color: transparent;
+      transition: border-color 0.2s;
+    }
+
+    .brutalist-card:hover {
+      border-color: #7b39fc;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0e0e0e;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #353534;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #7b39fc;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background text-on-surface antialiased font-body-md min-h-screen flex flex-col relative selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <!-- CRT Overlay -->
+  <div class="fixed inset-0 scanlines z-50 mix-blend-overlay"></div>
+  <!-- TopNavBar -->
+  <header
+    class="fixed top-0 w-full z-40 flex justify-between items-center px-margin-safe h-16 bg-background/95 backdrop-blur-sm border-b border-surface-container-highest">
+    <div class="flex items-center gap-gutter">
+      <span
+        class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tighter uppercase">BareMetal.js</span>
+      <nav id="mobile-menu"
+        class="hidden absolute top-16 left-0 w-full bg-background border-b border-surface-container-highest flex-col p-6 gap-6 md:static md:flex md:flex-row md:w-auto md:bg-transparent md:border-none md:p-0 md:ml-8">
+        <a class="nav-link font-code-sm text-code-sm text-primary-fixed font-bold border-b-2 border-primary-fixed pb-1 w-max"
+          href="#architecture">Architecture</a>
+        <a class="nav-link font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max"
+          href="#quick-start">Quick Start</a>
+        <a class="nav-link font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max"
+          href="#core-features">Features</a>
+        <a class="nav-link font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max"
+          href="#syntax-showcase">Syntax</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max"
+          href="getting-started.html">Getting Started</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max"
+          href="api-config.html">Config</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-unit">
+      <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px hidden sm:block"
+        href="https://github.com/dkydivyansh/BareMetal.js">View on GitHub</a>
+      <button id="menu-btn" class="md:hidden text-primary p-2">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </header>
+  <main class="flex-grow pt-16">
+    <!-- Hero Section -->
+    <section
+      class="relative min-h-screen w-full flex items-center justify-center border-b border-surface-container-highest overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <!-- STITCH_SHADER_START:ANIMATION_4 class="absolute inset-0 w-full h-full opacity-30 mix-blend-screen" -->
+        <div class="absolute inset-0 w-full h-full opacity-30 mix-blend-screen" style="display:block;">
+          <canvas id="shader-canvas-ANIMATION_4" style="display:block;width:100%;height:100%"></canvas>
+        </div>
+        <!-- STITCH_SHADER_END:ANIMATION_4 -->
+        <!-- Fallback gradient if shader fails -->
+        <div class="absolute inset-0 bg-gradient-to-br from-background via-surface to-surface-container-low opacity-50">
+        </div>
+        <!-- Grid pattern -->
+        <div class="absolute inset-0"
+          style="background-image: linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px); background-size: 32px 32px; opacity: 0.2;">
+        </div>
+      </div>
+      <div class="relative z-10 max-w-container-max mx-auto text-center flex flex-col items-center gap-8 mt-16">
+        <h1
+          class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary uppercase tracking-tighter max-w-4xl">
+          BareMetal.js:<br />
+          <span class="text-primary-fixed">The Web, Unchained.</span>
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto px-6 sm:px-0">
+          A dependency-free Vanilla JavaScript SPA engine. Get the blistering speed and state management of React, while
+          writing 100% pure, uncompiled Vanilla JS.<br><br>
+          <span class="text-primary-fixed font-bold tracking-widest uppercase text-sm">⚡ Fun fact: This very page is
+            powered by BareMetal.js!</span>
+        </p>
+        <div class="flex flex-col sm:flex-row gap-6 mt-8">
+          <a href="#quick-start" class="block">
+            <button
+              class="brutalist-button-primary w-full px-8 py-4 font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-2">
+              Get Started in 60 Seconds
+              <span class="material-symbols-outlined text-lg">bolt</span>
+            </button>
+          </a>
+          <a href="https://github.com/dkydivyansh/BareMetal.js" class="block">
+            <button
+              class="brutalist-button-secondary w-full px-8 py-4 font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-2">
+              View Source on GitHub
+              <span class="material-symbols-outlined text-lg">code</span>
+            </button>
+          </a>
+        </div>
+        <div class="mt-16 flex items-center gap-4 font-code-sm text-code-sm text-on-surface-variant">
+          <span class="w-12 h-px bg-surface-container-highest"></span>
+          <span id="github-version">v1.2.2</span> | 4.2kb Gzipped | 0 Dependencies
+          <span class="w-12 h-px bg-surface-container-highest"></span>
+        </div>
+      </div>
+      <a href="#architecture"
+        class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-on-surface-variant hover:text-primary-fixed transition-colors animate-bounce">
+        <span class="material-symbols-outlined text-4xl">expand_more</span>
+      </a>
+    </section>
+    <!-- Why BareMetal? Section -->
+    <section id="architecture"
+      class="py-24 px-margin-safe border-b border-surface-container-highest bg-surface-container-lowest">
+      <div class="max-w-container-max mx-auto">
+        <div class="mb-16 border-l-4 border-primary-fixed pl-6">
+          <h2 class="font-headline-md text-headline-md text-primary uppercase">Why BareMetal?</h2>
+          <p class="font-code-sm text-code-sm text-on-surface-variant mt-2">Architecture principles.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-surface-container-highest">
+          <div class="p-8 border-b md:border-b-0 md:border-r border-surface-container-highest brutalist-card group">
+            <span
+              class="material-symbols-outlined text-4xl text-primary-fixed mb-6 block group-hover:scale-110 transition-transform">layers_clear</span>
+            <h3 class="font-code-sm text-code-sm text-primary uppercase mb-4 tracking-wider">Zero Dependencies</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">No NPM hell. No node_modules black hole. Just
+              pure, native JavaScript executing directly in the V8 engine as intended.</p>
+          </div>
+          <div class="p-8 border-b md:border-b-0 md:border-r border-surface-container-highest brutalist-card group">
+            <span
+              class="material-symbols-outlined text-4xl text-primary-fixed mb-6 block group-hover:scale-110 transition-transform">lock_open</span>
+            <h3 class="font-code-sm text-code-sm text-primary uppercase mb-4 tracking-wider">No Vendor Lock-In</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">Your code is your code. BareMetal augments
+              standard DOM APIs rather than wrapping them in proprietary synthetic events.</p>
+          </div>
+          <div class="p-8 brutalist-card group">
+            <span
+              class="material-symbols-outlined text-4xl text-primary-fixed mb-6 block group-hover:scale-110 transition-transform">speed</span>
+            <h3 class="font-code-sm text-code-sm text-primary uppercase mb-4 tracking-wider">Unapologetic Performance
+            </h3>
+            <p class="font-body-md text-body-md text-on-surface-variant">Bypass the Virtual DOM overhead. Direct
+              surgical DOM updates yield 60fps animations and near-zero latency interactions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Quick Start Section -->
+    <section id="quick-start"
+      class="py-24 px-margin-safe border-b border-surface-container-highest bg-background relative overflow-hidden">
+      <!-- Background pattern -->
+      <div class="absolute inset-0"
+        style="background-image: linear-gradient(45deg, #131313 25%, #1c1b1b 25%, #1c1b1b 50%, #131313 50%, #131313 75%, #1c1b1b 75%, #1c1b1b 100%); background-size: 10px 10px; opacity: 0.5;">
+      </div>
+      <div class="max-w-container-max mx-auto relative z-10 flex flex-col lg:flex-row gap-16 items-center">
+        <div class="lg:w-1/3">
+          <div class="border-l-4 border-primary-fixed pl-6 mb-8">
+            <h2 class="font-headline-md text-headline-md text-primary uppercase">Initialization</h2>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+            Drop it in via CDN or install via NPM. No build step required. No Webpack config. Just raw execution.
+          </p>
+          <ul class="space-y-4 font-code-sm text-code-sm text-on-surface-variant">
+            <li class="flex items-center gap-2"><span class="text-primary-fixed">&gt;</span> Global Namespace Ready</li>
+            <li class="flex items-center gap-2"><span class="text-primary-fixed">&gt;</span> ES Module Support</li>
+            <li class="flex items-center gap-2"><span class="text-primary-fixed">&gt;</span> 4.2kb Payload</li>
+          </ul>
+        </div>
+        <div class="lg:w-2/3 w-full">
+          <!-- Terminal Window -->
+          <div
+            class="bg-surface-container-lowest border border-surface-container-highest shadow-[8px_8px_0px_#7b39fc] relative">
+            <!-- Window Header -->
+            <div
+              class="border-b border-surface-container-highest px-4 py-2 flex items-center justify-between bg-surface-container-low">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 bg-surface-container-highest rounded-full"></div>
+                <div class="w-3 h-3 bg-surface-container-highest rounded-full"></div>
+                <div class="w-3 h-3 bg-surface-container-highest rounded-full"></div>
+              </div>
+              <span class="font-code-sm text-code-sm text-on-surface-variant">bash -- root@baremetal</span>
+            </div>
+            <!-- Window Content -->
+            <div class="p-6 font-code-sm text-code-sm text-primary overflow-x-auto whitespace-pre">
+              <span class="text-on-surface-variant"># Option A: NPM Installation</span>
+              <span class="text-primary-fixed">npm</span> install @baremetaljs/core
+
+              <span class="text-on-surface-variant"># Option B: Direct CDN Import</span>
+              <span class="text-secondary-container">&lt;script</span> <span
+                class="text-tertiary-fixed-dim">type=</span><span class="text-primary-container">"module"</span><span
+                class="text-secondary-container">&gt;</span>
+              <span class="text-primary-fixed">import</span> { BareMetal, loader } <span
+                class="text-primary-fixed">from</span> <span
+                class="text-primary-container">'https://cdn.jsdelivr.net/npm/baremetal.js/src/index.min.js'</span>;
+              <span class="text-secondary-container">&lt;/script&gt;</span>
+            </div>
+            <!-- Copy Button -->
+            <button class="absolute top-14 right-4 text-on-surface-variant hover:text-primary-fixed transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Core Features Grid -->
+    <section id="core-features"
+      class="py-24 px-margin-safe border-b border-surface-container-highest bg-surface-container-low">
+      <div class="max-w-container-max mx-auto">
+        <div class="mb-16 border-l-4 border-primary-fixed pl-6">
+          <h2 class="font-headline-md text-headline-md text-primary uppercase">Core Engine Features</h2>
+          <p class="font-code-sm text-code-sm text-on-surface-variant mt-2">Systems level capabilities.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <div class="brutalist-card p-6 bg-surface-container-lowest relative overflow-hidden group">
+            <div
+              class="absolute top-0 right-0 w-16 h-16 bg-surface-container-highest transform rotate-45 translate-x-8 -translate-y-8 group-hover:bg-primary-fixed transition-colors">
+            </div>
+            <h4
+              class="font-code-sm text-code-sm text-primary font-bold uppercase mb-2 border-b border-surface-container-highest pb-2">
+              0ms Hover Pre-fetching</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Anticipates user intent. Assets
+              and JSON payloads are aggressively fetched on mouse-enter, guaranteeing instantaneous perceived load times
+              on click.</p>
+          </div>
+          <div class="brutalist-card p-6 bg-surface-container-lowest relative overflow-hidden group">
+            <div
+              class="absolute top-0 right-0 w-16 h-16 bg-surface-container-highest transform rotate-45 translate-x-8 -translate-y-8 group-hover:bg-primary-fixed transition-colors">
+            </div>
+            <h4
+              class="font-code-sm text-code-sm text-primary font-bold uppercase mb-2 border-b border-surface-container-highest pb-2">
+              Smart DOM Keep-Alive</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Inactive views are detached and
+              cached in memory, not destroyed. Returning to a previous route restores scroll position and state
+              immediately.</p>
+          </div>
+          <div class="brutalist-card p-6 bg-surface-container-lowest relative overflow-hidden group">
+            <div
+              class="absolute top-0 right-0 w-16 h-16 bg-surface-container-highest transform rotate-45 translate-x-8 -translate-y-8 group-hover:bg-primary-fixed transition-colors">
+            </div>
+            <h4
+              class="font-code-sm text-code-sm text-primary font-bold uppercase mb-2 border-b border-surface-container-highest pb-2">
+              State Hydration</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">A reactive signals-based store
+              that automatically binds to DOM nodes. Update the state, and only the bound text nodes or attributes
+              mutate.</p>
+          </div>
+          <div class="brutalist-card p-6 bg-surface-container-lowest relative overflow-hidden group">
+            <div
+              class="absolute top-0 right-0 w-16 h-16 bg-surface-container-highest transform rotate-45 translate-x-8 -translate-y-8 group-hover:bg-primary-fixed transition-colors">
+            </div>
+            <h4
+              class="font-code-sm text-code-sm text-primary font-bold uppercase mb-2 border-b border-surface-container-highest pb-2">
+              Component Lazy Loading</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-4 text-sm">Define components as async
+              closures. BareMetal orchestrates the dynamic import of CSS and JS only when the component enters the
+              viewport.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- API Showcase Section -->
+    <section id="syntax-showcase" class="py-24 px-margin-safe border-b border-surface-container-highest bg-background">
+      <div class="max-w-container-max mx-auto">
+        <div class="mb-16 border-l-4 border-primary-fixed pl-6">
+          <h2 class="font-headline-md text-headline-md text-primary uppercase">Syntax Showcase</h2>
+          <p class="font-code-sm text-code-sm text-on-surface-variant mt-2">No compiler. Just JS.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+          <!-- Code Block 1 -->
+          <div class="border border-surface-container-highest bg-[#000000] relative">
+            <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center">
+              <span class="font-code-sm text-code-sm text-on-surface-variant">1. Initialize the Engine</span>
+              <span
+                class="font-label-md text-label-md text-on-surface-variant hover:text-primary-fixed cursor-pointer">COPY</span>
+            </div>
+            <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+              <span class="text-secondary-container">BareMetal</span>.init({
+              <span class="text-tertiary-fixed-dim">hoverPrefetch</span>: <span
+                class="text-tertiary-fixed-dim">true</span>,
+              <span class="text-tertiary-fixed-dim">persistState</span>: <span
+                class="text-tertiary-fixed-dim">true</span>,
+              <span class="text-tertiary-fixed-dim">virtualizeDom</span>: <span
+                class="text-tertiary-fixed-dim">true</span>
+              });
+            </div>
+          </div>
+          <!-- Code Block 2 -->
+          <div class="border border-surface-container-highest bg-[#000000] relative">
+            <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center">
+              <span class="font-code-sm text-code-sm text-on-surface-variant">2. Load Modules on the Fly</span>
+              <span
+                class="font-label-md text-label-md text-on-surface-variant hover:text-primary-fixed cursor-pointer">COPY</span>
+            </div>
+            <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+              <span class="text-secondary-container">&lt;script</span> <span
+                class="text-tertiary-fixed-dim">type=</span><span class="text-primary-container">"module"</span><span
+                class="text-secondary-container">&gt;</span>
+              <span class="text-primary-fixed">import</span> { loader } <span class="text-primary-fixed">from</span>
+              <span class="text-primary-container">'./baremetal.min.js'</span>;
+
+              loader({
+              <span class="text-tertiary-fixed-dim">sharedSidebar</span>: <span
+                class="text-primary-container">"/js/sidebar.js"</span>,
+              <span class="text-tertiary-fixed-dim">heavyChart</span>: { <span
+                class="text-tertiary-fixed-dim">path</span>: <span class="text-primary-container">"/js/chart.js"</span>,
+              <span class="text-tertiary-fixed-dim">lazy</span>: <span
+                class="text-primary-container">"#chart-container"</span> }
+              });
+              <span class="text-secondary-container">&lt;/script&gt;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer
+    class="w-full border-t border-surface-container-highest py-12 px-margin-safe flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest dark:bg-surface-container-lowest">
+    <div class="font-headline-md text-headline-md text-primary">
+      BareMetal.js
+    </div>
+    <div class="flex flex-col md:flex-row gap-gutter items-center">
+      <nav class="flex gap-4">
+        <a class="font-code-sm text-code-sm text-on-tertiary-container hover:text-primary-fixed-dim underline transition-colors"
+          href="https://github.com/dkydivyansh/BareMetal.js">GitHub</a>
+        <a class="font-code-sm text-code-sm text-on-tertiary-container hover:text-primary-fixed-dim underline transition-colors"
+          href="getting-started.html">Documentation</a>
+        <a class="font-code-sm text-code-sm text-on-tertiary-container hover:text-primary-fixed-dim underline transition-colors"
+          href="https://www.npmjs.com/package/baremetal.js">NPM</a>
+      </nav>
+    </div>
+    <div class="font-code-sm text-code-sm text-on-surface-variant text-center md:text-right">
+      © <span class="copy-year"></span> by dkydivyansh.com / RAW PERFORMANCE ENGINE
+    </div>
+  </footer>
+  <script>
+    // Dynamically pull the latest version from GitHub API
+    fetch('https://api.github.com/repos/dkydivyansh/BareMetal.js/releases/latest')
+      .then(res => res.json())
+      .then(data => {
+        if (data.tag_name) {
+          document.getElementById('github-version').innerText = data.tag_name;
+        }
+      })
+      .catch(err => console.error('Failed to fetch latest release from GitHub', err));
+    document.getElementById('menu-btn').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+    });
+  </script>
+  <script type="module">
+    import { loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
+    loader({
+      shader: { path: './shader.js', lazy: '#shader-canvas-ANIMATION_4' }
+    });
+  </script>
+</body>
+
+</html>

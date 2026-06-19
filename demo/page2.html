@@ -49,7 +49,8 @@
     }
 
     #main-content {
-      margin-left: 250px; /* default expanded */
+      margin-left: 250px;
+      /* default expanded */
       padding: 30px;
       transition: margin-left 0.3s ease;
     }
@@ -60,7 +61,7 @@
       margin-bottom: 20px;
       border-radius: 8px;
       background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .shared {
@@ -83,17 +84,19 @@
 
   <div id="main-content">
     <h1>Welcome to Page 2</h1>
-    <p>This is a completely different page, but notice the sidebar and translation widget state are maintained perfectly!</p>
+    <p>This is a completely different page, but notice the sidebar and translation widget state are maintained
+      perfectly!</p>
 
-    <div id="media-container" class="widget" style="background: #333; color: white; border-left: 4px solid #e74c3c; transition: all 0.5s ease;">
+    <div id="media-container" class="widget"
+      style="background: #333; color: white; border-left: 4px solid #e74c3c; transition: all 0.5s ease;">
       <h3 style="margin-top:0;">Deeply Nested &amp; Transformed!</h3>
       <p>I am still embedded in the main content flow, but my container's text and CSS synced seamlessly!</p>
       <video id="demo-video" data-baremetal-preserve width="100%" controls autoplay muted loop>
         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
-      <br/>
-      <audio id="demo-audio" data-baremetal-preserve controls style="width: 300px; margin-top: 10px;">
+      <br />
+      <audio id="demo-audio" data-baremetal-preserve controls style="width: 100%; margin-top: 10px;">
         <source src="./assets/audio/darren_hirst-20-474737.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>

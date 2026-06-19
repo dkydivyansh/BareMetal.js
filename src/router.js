@@ -6,8 +6,10 @@ export const Router = {
   scrollMemory: {},
   historyStack: [],
   currentAbortController: null,
+  lastPathAndSearch: '',
 
   init() {
+    this.lastPathAndSearch = window.location.pathname + window.location.search;
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
@@ -22,7 +24,8 @@ export const Router = {
         anchor.origin !== window.location.origin ||
         anchor.target === '_blank' ||
         (anchor.rel && anchor.rel.includes('noreferrer')) ||
-        anchor.hasAttribute('download')
+        anchor.hasAttribute('download') ||
+        (anchor.getAttribute('href') || '').startsWith('#')
       ) {
         return;
       }
@@ -44,6 +47,7 @@ export const Router = {
         anchor.origin === window.location.origin &&
         anchor.target !== '_blank' &&
         !anchor.hasAttribute('download') &&
+        !(anchor.getAttribute('href') || '').startsWith('#') &&
         !this.htmlCache[anchor.href]
       ) {
         this.htmlCache[anchor.href] = 'fetching';
@@ -74,6 +78,11 @@ export const Router = {
   },
 
   async handleRoute(e) {
+    const currentPathAndSearch = window.location.pathname + window.location.search;
+    if (this.lastPathAndSearch === currentPathAndSearch) {
+      return; // Ignore navigations that only change the #hash
+    }
+    this.lastPathAndSearch = currentPathAndSearch;
 
     if (this.currentAbortController) {
       this.currentAbortController.abort();

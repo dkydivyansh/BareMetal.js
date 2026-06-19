@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>BareMetal.js - Custom Page Transitions</title>
+  
+  <!-- SEO & OpenGraph Meta Tags -->
+  <meta name="description" content="Build stunning custom page transitions with BareMetal.js. Learn how to hook into the ROUTE lifecycle events." />
+  <meta property="og:title" content="BareMetal.js - Custom Page Transitions" />
+  <meta property="og:description" content="Build stunning custom page transitions with BareMetal.js. Learn how to hook into the ROUTE lifecycle events." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://baremetal.dkydivyansh.com/api-transitions.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script type="module" src="config.js"></script>
+
+  <style>
+    .scanlines {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.05));
+      background-size: 100% 4px; pointer-events: none;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0e0e0e; }
+    ::-webkit-scrollbar-thumb { background: #353534; }
+    ::-webkit-scrollbar-thumb:hover { background: #7b39fc; }
+  </style>
+</head>
+
+<body class="bg-background text-on-surface antialiased font-body-md min-h-screen flex flex-col relative selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <div class="fixed inset-0 scanlines z-50 mix-blend-overlay"></div>
+  
+  <header class="fixed top-0 w-full z-40 flex justify-between items-center px-margin-safe h-16 bg-background/95 backdrop-blur-sm border-b border-surface-container-highest">
+    <div class="flex items-center gap-gutter">
+      <a href="index.html" class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tighter uppercase">BareMetal.js</a>
+      <nav id="mobile-menu" class="hidden absolute top-16 left-0 w-full bg-background border-b border-surface-container-highest flex-col p-6 gap-6 md:static md:flex md:flex-row md:w-auto md:bg-transparent md:border-none md:p-0 md:ml-8">
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="index.html">Home</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="getting-started.html">Getting Started</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-config.html">Config</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-init.html">Init</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-router.html">Router</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-state.html">State</a>
+        <a class="font-code-sm text-code-sm text-primary-fixed font-bold border-b-2 border-primary-fixed pb-1 font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-transitions.html">Transitions</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-unit">
+      <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px hidden sm:block" href="https://github.com/dkydivyansh/BareMetal.js">GitHub</a>
+      <button id="menu-btn" class="md:hidden text-primary p-2">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-grow pt-32 px-margin-safe max-w-container-max mx-auto w-full pb-24 relative z-10">
+    <div class="border-l-4 border-primary-fixed pl-6 mb-12">
+      <h1 class="font-headline-lg text-headline-lg text-primary uppercase">Custom Page Transitions</h1>
+      <p class="font-code-sm text-code-sm text-on-surface-variant mt-2">Animating between SPA states</p>
+    </div>
+    
+    <div class="space-y-16">
+      <section>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          You can replace the default progress bar and fade overlay by pointing <code>config.transition.module</code> to your own JavaScript file. A custom transition is just a standard BareMetal module that listens to routing events.
+        </p>
+
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Rules for Custom Transitions</h3>
+        <ol class="list-decimal pl-6 font-body-md text-on-surface-variant mb-12 space-y-4">
+          <li><span class="font-bold text-primary-fixed">The Protected Node:</span> You must inject your transition UI into an element with <code>id="baremetal-transition-root"</code>. The Router explicitly protects this specific ID from being destroyed when it swaps the <code>document.body.innerHTML</code>.</li>
+          <li><span class="font-bold text-primary-fixed">Listen to Events:</span> Use <code>state.on()</code> to listen to <code>ROUTE_START</code>, <code>ROUTE_PROGRESS</code>, <code>ROUTE_END</code>, and <code>ROUTE_ERROR</code>.</li>
+        </ol>
+
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Implementation Example</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">Here is an example of creating a custom loading spinner component.</p>
+        
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">custom_transition.js</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+<span class="text-primary-fixed">export function</span> mount({ state }) {
+  <span class="text-on-surface-variant">// 1. Create or get the protected root node</span>
+  <span class="text-primary-fixed">let</span> root = document.getElementById(<span class="text-primary-container">'baremetal-transition-root'</span>);
+  <span class="text-primary-fixed">if</span> (!root) {
+    root = document.createElement(<span class="text-primary-container">'div'</span>);
+    root.id = <span class="text-primary-container">'baremetal-transition-root'</span>;
+    document.body.appendChild(root);
+  }
+
+  <span class="text-on-surface-variant">// 2. Build your custom UI (e.g., a spinner)</span>
+  <span class="text-primary-fixed">const</span> spinner = document.createElement(<span class="text-primary-container">'div'</span>);
+  spinner.innerText = <span class="text-primary-container">"Loading..."</span>;
+  spinner.style.display = <span class="text-primary-container">'none'</span>;
+  root.appendChild(spinner);
+
+  <span class="text-primary-fixed">const</span> unsubs = [];
+
+  <span class="text-on-surface-variant">// 3. Listen to Router events</span>
+  unsubs.push(state.on(<span class="text-primary-container">'ROUTE_START'</span>, () =&gt; {
+    spinner.style.display = <span class="text-primary-container">'block'</span>;
+  }));
+
+  unsubs.push(state.on(<span class="text-primary-container">'ROUTE_PROGRESS'</span>, (payload) =&gt; {
+    <span class="text-on-surface-variant">// payload.progress goes from 0 to 100</span>
+    spinner.innerText = <span class="text-primary-container">`Loading... ${Math.round(payload.progress)}%`</span>;
+  }));
+
+  unsubs.push(state.on(<span class="text-primary-container">'ROUTE_END'</span>, () =&gt; {
+    spinner.style.display = <span class="text-primary-container">'none'</span>;
+  }));
+
+  <span class="text-primary-fixed">return</span> {
+    destroy: () =&gt; {
+      unsubs.forEach(u =&gt; u());
+      <span class="text-primary-fixed">if</span> (root.parentNode) root.parentNode.removeChild(root);
+    }
+  };
+}</div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <footer class="w-full border-t border-surface-container-highest py-12 px-margin-safe flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest">
+    <div class="font-headline-md text-headline-md text-primary">BareMetal.js</div>
+    <div class="font-code-sm text-code-sm text-on-surface-variant text-center md:text-right">
+      © <span class="copy-year"></span> by dkydivyansh.com / RAW PERFORMANCE ENGINE
+    </div>
+  </footer>
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+    });
+  </script>
+  <script type="module">
+    import { loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
+    loader({});
+  </script>
+</body>
+</html>

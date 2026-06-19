@@ -26,12 +26,22 @@ Load heavy widgets only when they scroll into view! The Loader supports an `Inte
 Never lose state on a hard reload again. If enabled, BareMetal automatically serializes the `stateManager` to `sessionStorage` in real-time. If the user hits F5, the engine instantly hydrates the state and bounces right back to where they were!
 
 ### DOM Virtualization Helper
-Rendering 10,000 table rows? BareMetal exposes a `Virtualizer` class that recycles DOM nodes to render massive lists with zero jank. When enabled globally, the engine automatically injects the `virtualize` helper directly into your module's `mount` context!.
-- **Scroll Memory & Programmatic Back:** Maintains a persistent history stack, restoring your exact scroll depth instantly when navigating backward.
-- **Reactive State Management:** Includes a built-in publish/subscribe Signals pattern, preventing race conditions and keeping your UI synced.
-- **Custom Page Transitions:** Build and integrate your own loading animations and transition effects hooking into the routing lifecycle.
-- **Error Boundaries:** Handles navigation failures gracefully with configurable fallback UIs.
-- **Auto-Wrap Module Loader:** Can automatically wrap simple scripts into conformant lifecycle modules to prevent errors.
+Rendering 10,000 table rows? BareMetal exposes a `Virtualizer` class that recycles DOM nodes to render massive lists with zero jank. When enabled globally, the engine automatically injects the `virtualize` helper directly into your module's `mount` context.
+
+### Scroll Memory & Programmatic Back
+Maintains a persistent history stack, restoring your exact scroll depth instantly when navigating backward.
+
+### Reactive State Management
+Includes a built-in publish/subscribe Signals pattern, preventing race conditions and keeping your UI synced.
+
+### Custom Page Transitions
+Build and integrate your own loading animations and transition effects hooking into the routing lifecycle.
+
+### Error Boundaries
+Handles navigation failures gracefully with configurable fallback UIs.
+
+### Auto-Wrap Module Loader
+Can automatically wrap simple scripts into conformant lifecycle modules to prevent errors.
 
 ## Quick Start
 

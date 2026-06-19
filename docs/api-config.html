@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>BareMetal.js - Configuration</title>
+  
+  <!-- SEO & OpenGraph Meta Tags -->
+  <meta name="description" content="Detailed configuration options for BareMetal.js. Learn how to customize the SPA engine, routing behavior, and native view transitions." />
+  <meta property="og:title" content="BareMetal.js - Configuration" />
+  <meta property="og:description" content="Detailed configuration options for BareMetal.js. Learn how to customize the SPA engine, routing behavior, and native view transitions." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://baremetal.dkydivyansh.com/api-config.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script type="module" src="config.js"></script>
+
+  <style>
+    .scanlines {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.05));
+      background-size: 100% 4px; pointer-events: none;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0e0e0e; }
+    ::-webkit-scrollbar-thumb { background: #353534; }
+    ::-webkit-scrollbar-thumb:hover { background: #7b39fc; }
+  </style>
+</head>
+
+<body class="bg-background text-on-surface antialiased font-body-md min-h-screen flex flex-col relative selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <div class="fixed inset-0 scanlines z-50 mix-blend-overlay"></div>
+  
+  <header class="fixed top-0 w-full z-40 flex justify-between items-center px-margin-safe h-16 bg-background/95 backdrop-blur-sm border-b border-surface-container-highest">
+    <div class="flex items-center gap-gutter">
+      <a href="index.html" class="font-headline-md text-headline-md text-primary dark:text-primary tracking-tighter uppercase">BareMetal.js</a>
+      <nav id="mobile-menu" class="hidden absolute top-16 left-0 w-full bg-background border-b border-surface-container-highest flex-col p-6 gap-6 md:static md:flex md:flex-row md:w-auto md:bg-transparent md:border-none md:p-0 md:ml-8">
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="index.html">Home</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="getting-started.html">Getting Started</a>
+        <a class="font-code-sm text-code-sm text-primary-fixed font-bold border-b-2 border-primary-fixed pb-1 font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-config.html">Config</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-init.html">Init</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-router.html">Router</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-state.html">State</a>
+        <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px w-max" href="api-transitions.html">Transitions</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-unit">
+      <a class="font-code-sm text-code-sm text-on-surface-variant font-medium hover:text-primary-fixed transition-colors duration-150 active:translate-y-px hidden sm:block" href="https://github.com/dkydivyansh/BareMetal.js">GitHub</a>
+      <button id="menu-btn" class="md:hidden text-primary p-2">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-grow pt-32 px-margin-safe max-w-container-max mx-auto w-full pb-24 relative z-10">
+    <div class="border-l-4 border-primary-fixed pl-6 mb-12">
+      <h1 class="font-headline-lg text-headline-lg text-primary uppercase">Configuration Options</h1>
+      <p class="font-code-sm text-code-sm text-on-surface-variant mt-2">Deep dive into BareMetal.init() properties</p>
+    </div>
+    
+    <div class="space-y-16">
+      
+      <!-- Core Settings -->
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 border-b border-surface-container-highest pb-2">Core Settings</h3>
+        
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">debug <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Enables verbose console logs during the module loading and routing lifecycles.</p>
+          <div class="border border-surface-container-highest bg-[#000000] p-4 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">BareMetal.init({ <span class="text-tertiary-fixed-dim">debug</span>: <span class="text-primary-fixed">true</span> });</div>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">keepAliveSameModules <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: true)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Prevents destruction of modules that are shared between the outgoing and incoming routes, improving cross-page performance and preserving internal module state.</p>
+          <div class="border border-surface-container-highest bg-[#000000] p-4 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">BareMetal.init({ <span class="text-tertiary-fixed-dim">keepAliveSameModules</span>: <span class="text-primary-fixed">true</span> });</div>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">autoWrap <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: true)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Automatically wraps loaded JS modules that do not export a <code>mount</code> function. This ensures third-party scripts don't break the loader sequence.</p>
+        </div>
+      </section>
+
+      <!-- Performance -->
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 border-b border-surface-container-highest pb-2">Performance</h3>
+        
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">hoverPrefetch <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Enables 0ms latency pre-fetching. When a user hovers over an internal link, BareMetal quietly fetches the HTML payload in the background before they even click.</p>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">virtualizeDom <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Injects the Virtualizer helper directly into the mount contexts of your modules for optimized rendering.</p>
+        </div>
+      </section>
+
+      <!-- Resilience & UX -->
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 border-b border-surface-container-highest pb-2">Resilience & UX</h3>
+        
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">persistState <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Automatically serializes the global <code>stateManager</code> to <code>sessionStorage</code>. When a user forces an F5 refresh, the state is fully recovered, preventing data loss.</p>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">showErrorNotification <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">When a navigation fails (e.g., 404), BareMetal will float an error boundary on the screen instead of silently dropping the error or breaking the DOM.</p>
+        </div>
+      </section>
+
+      <!-- Transitions -->
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 border-b border-surface-container-highest pb-2">Transitions</h3>
+        
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">transition.enabled <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Enables the protected transition module system.</p>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">transition.module <span class="text-on-surface-variant font-normal normal-case ml-2">(string | default: null)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Points to your custom transition JavaScript file. The element with <code>id="baremetal-transition-root"</code> is protected from DOM swaps to ensure the transition continues across navigation boundaries.</p>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">transition.simulatedDelay <span class="text-on-surface-variant font-normal normal-case ml-2">(number | default: 0)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Adds an artificial delay (in ms) during navigation to test transition animations effectively locally.</p>
+        </div>
+
+        <div class="mb-10">
+          <h4 class="font-code-sm text-primary-fixed uppercase mb-2">transition.useViewTransitions <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
+          <p class="font-body-md text-on-surface-variant mb-4">Uses the browser's native View Transitions API (<code>document.startViewTransition</code>) to perform buttery smooth cross-fades between the outgoing and incoming DOM payloads. No custom CSS needed.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="w-full border-t border-surface-container-highest py-12 px-margin-safe flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest">
+    <div class="font-headline-md text-headline-md text-primary">BareMetal.js</div>
+    <div class="font-code-sm text-code-sm text-on-surface-variant text-center md:text-right">
+      © <span class="copy-year"></span> by dkydivyansh.com / RAW PERFORMANCE ENGINE
+    </div>
+  </footer>
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+    });
+  </script>
+  <script type="module">
+    import { loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
+    loader({});
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "baremetal.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A lightweight, dependency-free Vanilla JavaScript SPA engine prioritizing extreme performance, native browser features, and explicit lifecycle management.",
   "main": "src/index.js",
   "type": "module",
