@@ -45,7 +45,7 @@ window.tailwind.config = {
         "surface-dim": "#131313",
         "tertiary-fixed": "#d2e5f5",
         "primary": "#ffffff",
-        "background": "#131313",
+        "background": "#000000ff",
         "surface-tint": "#7b39fc",
         "outline": "#938f99",
         "inverse-on-surface": "#313030",
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
-  
+
   setYear();
   const bodyObserver = new MutationObserver(setYear);
   bodyObserver.observe(document.body, { childList: true, subtree: true });

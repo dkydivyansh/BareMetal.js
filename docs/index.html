@@ -432,16 +432,12 @@
         }
       })
       .catch(err => console.error('Failed to fetch latest release from GitHub', err));
-    document.getElementById('menu-btn').addEventListener('click', () => {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('flex');
-    });
   </script>
   <script type="module">
     import { loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@1.2.3/dist/baremetal.js';
     loader({
-      shader: { path: './shader.js', lazy: '#shader-canvas-ANIMATION_4' }
+      shader: { path: './shader.js', lazy: '#shader-canvas-ANIMATION_4' },
+      mobileMenu: './mobile-menu.js'
     });
   </script>
 </body>

@@ -105,16 +105,11 @@
       © <span class="copy-year"></span> by dkydivyansh.com / RAW PERFORMANCE ENGINE
     </div>
   </footer>
-  <script>
-    document.getElementById('menu-btn').addEventListener('click', () => {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-      menu.classList.toggle('flex');
-    });
-  </script>
   <script type="module">
     import { loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@1.2.3/dist/baremetal.js';
-    loader({});
+    loader({
+      mobileMenu: './mobile-menu.js'
+    });
   </script>
 </body>
 </html>
