@@ -86,7 +86,7 @@ window.tailwind.config = {
   }
 };
 
-import { BareMetal } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
+import { BareMetal } from 'https://cdn.jsdelivr.net/npm/baremetal.js@1.2.3/dist/baremetal.js';
 
 BareMetal.init({
   hoverPrefetch: true,
