@@ -135,3 +135,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const bodyObserver = new MutationObserver(setYear);
   bodyObserver.observe(document.body, { childList: true, subtree: true });
 });
+
+// Event Delegation for Mobile Menu
+// This ensures the menu works perfectly even when BareMetal swaps the DOM!
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#menu-btn');
+  if (btn) {
+    const menu = document.getElementById('mobile-menu');
+    if (menu) {
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+    }
+  }
+});

@@ -59,7 +59,7 @@ import { BareMetal, loader } from 'baremetal.js';
 **Option 2: Using jsDelivr CDN**
 To use the latest version directly in the browser without any build tools, import it via CDN:
 ```javascript
-import { BareMetal, loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@1.2.3/dist/baremetal.js';
+import { BareMetal, loader } from 'https://cdn.jsdelivr.net/npm/baremetal.js@latest/dist/baremetal.min.js';
 ```
 
 **Option 3: Manual Download**
