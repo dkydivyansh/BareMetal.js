@@ -90,6 +90,88 @@
 });</div>
         </div>
 
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Importing & Auto-Wrapping JS Modules</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          BareMetal strictly uses ES Modules (<code>type: "module"</code>). When navigating to a new page, the engine dynamically imports the scripts defined in your <code>loader({...})</code> configuration.
+        </p>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          By default, dynamically imported modules are expected to export a <code>mount(context)</code> function. However, if you are working with plain JavaScript files that don't explicitly export a <code>mount</code> function, BareMetal's built-in <strong>auto-wrapper</strong> will handle it.
+        </p>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          When <code>autoWrap: true</code> is enabled (which is the default), the engine fetches the script and automatically wraps the content inside a <code>mount</code> function, injecting the <code>state</code> context for you:
+        </p>
+
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">Auto-Wrapped Output Example</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+<span class="text-tertiary-fixed-dim">export async function</span> <span class="text-secondary-container">mount</span>(context) {
+  <span class="text-tertiary-fixed-dim">const</span> { state } = context;
+  <span class="text-on-surface-variant">// Your original script content here</span>
+}</div>
+        </div>
+
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Manual Module Wrapping</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          For full control (and to avoid the overhead of auto-wrapping), you can manually export the <code>mount</code> function. This allows you to safely subscribe to state changes, initialize UI bindings, and return a <code>destroy()</code> function for garbage collection when the user navigates away.
+        </p>
+
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">assets/js/shared.js</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+<span class="text-tertiary-fixed-dim">export function</span> <span class="text-secondary-container">mount</span>({ state }) {
+  <span class="text-on-surface-variant">// 1. Initialize state</span>
+  state.init('transCount', 0);
+
+  <span class="text-on-surface-variant">// 2. Bind UI Elements</span>
+  <span class="text-tertiary-fixed-dim">const</span> bindUI = () => {
+    <span class="text-tertiary-fixed-dim">const</span> btn = document.getElementById('btn-translate');
+    <span class="text-primary-fixed">if</span> (btn) {
+      btn.onclick = () => state.update('transCount', state.get('transCount') + 1);
+    }
+  };
+
+  bindUI();
+
+  <span class="text-on-surface-variant">// 3. Listen to state changes</span>
+  <span class="text-tertiary-fixed-dim">const</span> unsub = state.subscribe('transCount', (val) => {
+    <span class="text-tertiary-fixed-dim">const</span> display = document.getElementById('trans-count');
+    <span class="text-primary-fixed">if</span> (display) display.textContent = val;
+  });
+
+  <span class="text-on-surface-variant">// 4. Return destroy function for cleanup</span>
+  <span class="text-primary-fixed">return</span> {
+    destroy: () => {
+      unsub();
+      <span class="text-on-surface-variant">// Remove other event listeners...</span>
+    }
+  };
+}</div>
+        </div>
+
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Importing Modules via Loader</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          Once your module is ready, you tell the engine to load it on specific pages by calling <code>loader({...})</code> in the HTML:
+        </p>
+
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">index.html</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+<span class="text-secondary-container">&lt;script</span> <span class="text-tertiary-fixed-dim">type=</span><span class="text-primary-container">"module"</span><span class="text-secondary-container">&gt;</span>
+  <span class="text-primary-fixed">import</span> { loader } <span class="text-primary-fixed">from</span> <span class="text-primary-container">'baremetal.js'</span>;
+  
+  <span class="text-on-surface-variant">// The key ('shared') can be any identifier you choose</span>
+  loader({
+    <span class="text-tertiary-fixed-dim">shared</span>: <span class="text-primary-container">'/assets/js/shared.js'</span>
+  });
+<span class="text-secondary-container">&lt;/script&gt;</span></div>
+        </div>
+
         <h3 class="font-headline-md text-primary uppercase mb-6">Configuration Reference</h3>
         <div class="mt-4">
           <p class="font-body-md text-on-surface-variant mb-6">BareMetal exposes several powerful configuration options to control module caching, page transitions, and DOM virtualization.</p>
