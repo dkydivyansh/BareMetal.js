@@ -110,6 +110,15 @@ export const Router = {
         Loader.log(`Used pre-fetched cache for ${url}`);
       } else {
         const response = await fetch(url, { signal });
+        
+        if (response.redirected) {
+          const newUrl = new URL(response.url);
+          Loader.log(`Redirect detected to ${newUrl.pathname}. Continuing SPA transition to new destination.`);
+          // Sync the URL bar and router state to the redirect destination
+          history.replaceState(null, '', newUrl.pathname + newUrl.search);
+          this.lastPathAndSearch = newUrl.pathname + newUrl.search;
+        }
+
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         htmlText = await response.text();
       }
