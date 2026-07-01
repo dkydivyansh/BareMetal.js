@@ -62,6 +62,38 @@ Listens for a Pub/Sub event.
 
 ---
 
+## 4. Module Auto-Cleanup & Sandboxing
+
+BareMetal provides a safe cleanup registry during module `mount` to help manage memory and global pollution, reducing boilerplate.
+
+### `context.onCleanup(callback)`
+Instead of explicitly returning a `destroy` function from your module, you can register cleanup tasks using `onCleanup`. The engine will automatically execute all registered callbacks when the module unmounts.
+
+This is highly recommended for cleaning up:
+1. Global `window` function assignments.
+2. `window.addEventListener` / `document.addEventListener`.
+3. Local class instances (like third-party editors).
+
+**Example:**
+```javascript
+export function mount({ state, onCleanup }) {
+  const chart = new Chart(document.getElementById('chart'), config);
+  
+  window.myCustomFunc = () => console.log('hello');
+  
+  // Register manual cleanups
+  onCleanup(() => {
+    chart.destroy();
+    delete window.myCustomFunc;
+  });
+  
+  // Alternatively, you can still return an explicit destroy function:
+  // return { destroy: () => { ... } };
+}
+```
+
+---
+
 ## 4. Writing Custom Page Transitions
 
 You can replace the default progress bar and fade overlay by pointing `config.transition.module` to your own JavaScript file. A custom transition is just a standard BareMetal module that listens to routing events.

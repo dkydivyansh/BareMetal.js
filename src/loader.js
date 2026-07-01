@@ -105,11 +105,22 @@ export const Loader = {
               context.virtualize = virtualize;
             }
 
+            // Safe Cleanup Registry
+            const cleanups = [];
+            context.onCleanup = (cb) => cleanups.push(cb);
+
             const instance = await module.mount(context);
+
+            const autoDestroy = () => {
+                cleanups.forEach(cb => { try { cb(); } catch(e) { console.error(e); } });
+                if (instance && typeof instance.destroy === 'function') {
+                    try { instance.destroy(); } catch(e) { console.error(e); }
+                }
+            };
 
             this.activeModules[key] = {
               path: path,
-              module: instance ? { destroy: instance.destroy } : module
+              module: { destroy: autoDestroy }
             };
           } else {
             console.error(`[BareMetal] Module ${path} failed to provide a mount function even after wrapping.`);

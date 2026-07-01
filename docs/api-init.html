@@ -122,7 +122,7 @@
             <span class="font-code-sm text-code-sm text-on-surface-variant">assets/js/shared.js</span>
           </div>
           <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
-<span class="text-tertiary-fixed-dim">export function</span> <span class="text-secondary-container">mount</span>({ state }) {
+<span class="text-tertiary-fixed-dim">export function</span> <span class="text-secondary-container">mount</span>({ state, onCleanup }) {
   <span class="text-on-surface-variant">// 1. Initialize state</span>
   state.init('transCount', 0);
 
@@ -142,11 +142,16 @@
     <span class="text-primary-fixed">if</span> (display) display.textContent = val;
   });
 
-  <span class="text-on-surface-variant">// 4. Return destroy function for cleanup</span>
+  <span class="text-on-surface-variant">// 4. Register cleanups using the hook</span>
+  onCleanup(() => {
+    unsub();
+    <span class="text-on-surface-variant">// Remove other event listeners...</span>
+  });
+
+  <span class="text-on-surface-variant">// Alternatively, you can explicitly return a destroy function:</span>
   <span class="text-primary-fixed">return</span> {
     destroy: () => {
-      unsub();
-      <span class="text-on-surface-variant">// Remove other event listeners...</span>
+      <span class="text-on-surface-variant">// Cleanup to prevent memory leaks</span>
     }
   };
 }</div>

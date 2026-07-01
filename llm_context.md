@@ -82,23 +82,34 @@ The state manager acts as a reactive store and a global Pub/Sub event bus. It is
 ## 5. Module System: Importing & Wrapping
 BareMetal strictly uses ES Modules. When navigating, the engine dynamically imports scripts defined in the page's `loader({...})` configuration.
 
-### Manual Module Wrapping (Best Practice)
-Modules should export a `mount(context)` function that initializes state/UI and returns a `destroy()` function for cleanup when navigating away.
+### Module Cleanup & `onCleanup` Hook
+To prevent memory leaks across SPA navigations, modules must clean up global assignments (`window.someFunc`), event listeners, and class instances. 
+
+You can use the `onCleanup` hook provided in the `context` to register cleanup callbacks, which keeps your setup and teardown logic colocated:
 
 ```javascript
 // /assets/js/my-module.js
-export function mount({ state }) {
+export function mount({ state, onCleanup }) {
   state.init('counter', 0);
   
-  const unsub = state.subscribe('counter', (val) => {
-    // update UI
-  });
+  const chart = new Chart('#canvas', config);
+  window.myFunc = () => {};
 
+  // Colocate cleanup for local variables and globals
+  onCleanup(() => {
+    chart.destroy();
+    delete window.myFunc;
+  });
+  
+  // Alternatively, you can explicitly return a destroy function:
+  /*
+  const unsub = state.subscribe('counter', () => {});
   return {
     destroy: () => {
       unsub(); // Cleanup to prevent memory leaks
     }
   };
+  */
 }
 ```
 

@@ -97,6 +97,33 @@ history.pushState({}, <span class="text-primary-container">""</span>, <span clas
 <span class="text-secondary-container">BareMetal</span>.router.handleRoute();</div>
         </div>
       </section>
+
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Route Cleanups (onCleanup)</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          When the router navigates away from a page, it destroys the active modules. You should register cleanup logic to prevent memory leaks across route changes.
+        </p>
+
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">Cleanup Example</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+<span class="text-tertiary-fixed-dim">export function</span> <span class="text-secondary-container">mount</span>({ state, onCleanup }) {
+  <span class="text-on-surface-variant">// 1. Register cleanups using the hook</span>
+  onCleanup(() => {
+    <span class="text-on-surface-variant">// cleanup logic here</span>
+  });
+
+  <span class="text-on-surface-variant">// 2. Alternatively, return an explicit destroy function</span>
+  <span class="text-primary-fixed">return</span> {
+    destroy: () => {
+      <span class="text-on-surface-variant">// cleanup logic here</span>
+    }
+  };
+}</div>
+        </div>
+      </section>
     </div>
   </main>
 
