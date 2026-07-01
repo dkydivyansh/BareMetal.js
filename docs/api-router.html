@@ -124,6 +124,24 @@ history.pushState({}, <span class="text-primary-container">""</span>, <span clas
 }</div>
         </div>
       </section>
+
+      <section>
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">DOM Swapping & Page-Specific Assets</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          When the BareMetal Router performs an SPA navigation, it swaps the <code>&lt;body&gt;</code> using <code>innerHTML</code>. This introduces two critical web security/architecture caveats:
+        </p>
+
+        <ul class="list-disc list-inside font-body-md text-on-surface-variant mb-6 space-y-4">
+          <li>
+            <strong>Page-Specific Styles (<code>data-baremetal="style"</code>)</strong><br>
+            The router deliberately strips out all <code>&lt;link&gt;</code> and <code>&lt;style&gt;</code> tags from the <code>&lt;head&gt;</code> of the newly fetched page to prevent CSS bloat, <strong>unless</strong> they include the <code>data-baremetal="style"</code> attribute. If a page has custom CSS, you MUST add this attribute so the router preserves it during navigation.
+          </li>
+          <li>
+            <strong>Page-Specific Scripts (<code>&lt;script src="..."&gt;</code>)</strong><br>
+            Browsers <strong>do not execute</strong> <code>&lt;script&gt;</code> tags injected via <code>innerHTML</code>. If a page relies on an external script placed in its <code>&lt;body&gt;</code>, it will fail to load during SPA navigation. You must either make the library a global dependency (in the <code>&lt;head&gt;</code> of the initial load), or dynamically inject the script via JS (<code>document.createElement('script')</code>) inside your module's <code>mount()</code> function.
+          </li>
+        </ul>
+      </section>
     </div>
   </main>
 

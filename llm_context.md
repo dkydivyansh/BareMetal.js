@@ -150,3 +150,22 @@ You can replace the default loading bar by providing a custom transition module 
    - `ROUTE_PROGRESS` (includes `payload.progress` from 0 to 100)
    - `ROUTE_END`
    - `ROUTE_ERROR`
+
+---
+
+## 7. DOM Swapping & Page-Specific Assets
+When the BareMetal Router performs an SPA navigation, it swaps the `<body>` using `innerHTML`. This introduces two critical web security/architecture caveats you MUST account for when loading external libraries on specific pages (e.g., WYSIWYG editors, charts):
+
+1. **Page-Specific Styles (`data-baremetal="style"`)**
+   The router deliberately strips out all `<link>` and `<style>` tags from the `<head>` of the newly fetched page to prevent CSS bloat, **unless** they include the `data-baremetal="style"` attribute. 
+   If a page has custom CSS (like a `<style>` block) or external CSS dependencies, you MUST add this attribute so the router preserves it:
+   ```html
+   <link rel="stylesheet" href="external-lib.css" data-baremetal="style" />
+   <style data-baremetal="style"> .my-custom-class { color: red; } </style>
+   ```
+
+2. **Page-Specific Scripts (`<script src="...">`)**
+   Browsers **do not execute** `<script>` tags injected via `innerHTML`. If a page relies on an external `<script src="...">` tag placed in its `<body>`, it will completely fail to load during SPA navigation.
+   **Solution:** You must either:
+   - Make the library a global dependency by placing it in the `<head>` of the initial app load (e.g., `index.php` or `header.php`).
+   - Or, dynamically inject the `<script>` tag via JS using `document.createElement('script')` inside your module's `mount()` function.
