@@ -177,7 +177,19 @@
 <span class="text-secondary-container">&lt;/script&gt;</span></div>
         </div>
 
-        <h3 class="font-headline-md text-primary uppercase mb-6">Configuration Reference</h3>
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Bypassing the SPA Router</h3>
+        <p class="font-body-md text-on-surface-variant mb-6">
+          If you have internal links that you do <strong>not</strong> want the engine to intercept (e.g., links that trigger server-side redirects, file downloads, or SSO authentication), you can add the <code>data-baremetal="ignore"</code> attribute to the anchor tag. This forces the browser to perform a native, hard navigation.
+        </p>
+        <div class="border border-surface-container-highest bg-[#000000] relative mb-12">
+          <div class="border-b border-surface-container-highest px-4 py-2 flex justify-between items-center bg-surface-container-low">
+            <span class="font-code-sm text-code-sm text-on-surface-variant">Usage Example</span>
+          </div>
+          <div class="p-6 font-code-sm text-code-sm overflow-x-auto whitespace-pre text-primary">
+&lt;<span class="text-secondary-container">a</span> <span class="text-tertiary-fixed-dim">href</span>=<span class="text-primary-container">"/api/login"</span> <span class="text-tertiary-fixed-dim">data-baremetal</span>=<span class="text-primary-container">"ignore"</span>&gt;Login&lt;/<span class="text-secondary-container">a</span>&gt;</div>
+        </div>
+
+        <h3 class="font-headline-md text-primary uppercase mb-6 mt-12">Configuration Reference</h3>
         <div class="mt-4">
           <p class="font-body-md text-on-surface-variant mb-6">BareMetal exposes several powerful configuration options to control module caching, page transitions, and DOM virtualization.</p>
           <a href="api-config.html" class="inline-block px-6 py-3 border border-primary-fixed text-primary-fixed hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors duration-200 font-code-sm uppercase tracking-wider">Read Full Configuration Guide</a>

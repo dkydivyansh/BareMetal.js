@@ -25,6 +25,7 @@ export const Router = {
         anchor.target === '_blank' ||
         (anchor.rel && anchor.rel.includes('noreferrer')) ||
         anchor.hasAttribute('download') ||
+        anchor.getAttribute('data-baremetal') === 'ignore' ||
         (anchor.getAttribute('href') || '').startsWith('#')
       ) {
         return;
@@ -47,6 +48,7 @@ export const Router = {
         anchor.origin === window.location.origin &&
         anchor.target !== '_blank' &&
         !anchor.hasAttribute('download') &&
+        anchor.getAttribute('data-baremetal') !== 'ignore' &&
         !(anchor.getAttribute('href') || '').startsWith('#') &&
         !this.htmlCache[anchor.href]
       ) {
@@ -225,6 +227,18 @@ export const Router = {
       }
       console.error("Routing error:", err);
       stateManager.publish('ROUTE_ERROR', { url, error: err.message });
+
+      // If fetch fails due to CORS (e.g. following an external redirect) or network issues,
+      // fall back to native browser navigation immediately so the browser can handle it natively.
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        Loader.log(`Fetch failed for ${url} (possible CORS/Redirect). Falling back to native navigation.`);
+        if (this.historyStack.length > 0) {
+          const prev = this.historyStack.pop();
+          history.replaceState(null, '', prev);
+        }
+        window.location.assign(url);
+        return;
+      }
 
       if (Loader.config.showErrorNotification) {
 

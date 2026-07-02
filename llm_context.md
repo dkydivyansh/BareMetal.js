@@ -158,6 +158,7 @@ When the BareMetal Router performs an SPA navigation, it swaps the `<body>` usin
 
 1. **Page-Specific Styles (`data-baremetal="style"`)**
    The router deliberately strips out all `<link>` and `<style>` tags from the `<head>` of the newly fetched page to prevent CSS bloat, **unless** they include the `data-baremetal="style"` attribute. 
+
    If a page has custom CSS (like a `<style>` block) or external CSS dependencies, you MUST add this attribute so the router preserves it:
    ```html
    <link rel="stylesheet" href="external-lib.css" data-baremetal="style" />
@@ -169,3 +170,10 @@ When the BareMetal Router performs an SPA navigation, it swaps the `<body>` usin
    **Solution:** You must either:
    - Make the library a global dependency by placing it in the `<head>` of the initial app load (e.g., `index.php` or `header.php`).
    - Or, dynamically inject the `<script>` tag via JS using `document.createElement('script')` inside your module's `mount()` function.
+
+3. **Bypassing the SPA Router (`data-baremetal="ignore"`)**
+   The router intercepts all internal `<a>` links and fetches them asynchronously. If a link points to an internal API endpoint that redirects (e.g., SSO Login, file downloads, external redirects), the router will follow the redirect in the background (causing CORS errors) instead of navigating the browser.
+   To bypass the SPA router and force a hard native browser navigation, add the `data-baremetal="ignore"` attribute to the anchor tag:
+   ```html
+   <a href="/public/api/auth/sso_login" data-baremetal="ignore">Login with SSO</a>
+   ```

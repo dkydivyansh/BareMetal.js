@@ -95,6 +95,9 @@
         <div class="mb-10">
           <h4 class="font-code-sm text-primary-fixed uppercase mb-2">hoverPrefetch <span class="text-on-surface-variant font-normal normal-case ml-2">(boolean | default: false)</span></h4>
           <p class="font-body-md text-on-surface-variant mb-4">Enables 0ms latency pre-fetching. When a user hovers over an internal link, BareMetal quietly fetches the HTML payload in the background before they even click.</p>
+          <div class="border-l-4 border-secondary-container bg-surface-container-low p-4 mt-4">
+            <p class="font-body-sm text-on-surface-variant"><strong>Tip:</strong> If you have internal links that trigger API redirects (like SSO login) or file downloads, you should prevent the router (and hoverPrefetch) from intercepting them by adding the <code>data-baremetal="ignore"</code> attribute to the <code>&lt;a&gt;</code> tag.</p>
+          </div>
         </div>
 
         <div class="mb-10">
